@@ -1,9 +1,6 @@
 
-# Nuct
-
 <p align="center">
-  <img src="examples/image-1.png" alt="Nuct Logo" width="120" />
-</p>
+  <img src="assets/logo-small.png" alt="Nuct Logo" width="120" />
 
 ## 你只需要关注业务，将基础设施交给Nuct！
 
@@ -24,6 +21,12 @@
 
 - 中小型应用的快速开发神器
 - 已配置 Cursor Rules，可接入 AI 辅助快速开发和交付
+
+
+## 系统截图 📸
+
+![](examples/image-1.png)
+![](examples/image-2.png)
 
 ## 目录 📚
 
@@ -168,10 +171,6 @@ pnpm migration:revert   # 回滚
 
 > 若实体类或数据库配置有更新，请先执行 `pnpm build` 再进行迁移。
 
-## 系统截图 📸
-
-![](examples/image-1.png)
-![](examples/image-2.png)
 
 ## 贡献 🤝
 

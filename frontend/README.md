@@ -1,6 +1,14 @@
-# vue3-antdv-admin
+<p align="center">
+  <img src="src/assets/images/logo-small.png" alt="Nuct Logo" width="120" />
+  </p>
 
-基于 vite5.x + vue3.x + antd-design-vue4.x + typescript5.x 的后台管理系统
+<p align="center">
+  <strong>你只需要关注业务，将基础设施交给Nuct！</strong>
+</p>
+
+<p align="center">
+  <strong>基于 NestJs +Vue3的企业级前后端分离快速开发脚手架</strong>
+</p>
 
 - 账号：admin，密码：a123456
 - [在线预览](http://buqiyuan.gitee.io/vue3-antdv-admin/)
@@ -9,6 +17,12 @@
 - [后端仓库地址](https://github.com/zeeklog/nuct)
 - [gitee 地址](https://gitee.com/buqiyuan/vue3-antdv-admin)
 - 根据 JSON 生成 typescript 的工具：[http://json2ts.com/](http://json2ts.com/)
+
+
+## 系统截图 📸
+
+![](../examples/image-1.png)
+![](../examples/image-2.png)
 
 ## 安装使用
 
