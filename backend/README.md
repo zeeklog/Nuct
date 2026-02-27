@@ -24,11 +24,16 @@
 
 ## 项目启动前的准备工作
 
+- 🆘 创建配置文件：
+  -  请将`.env.example`复制为`.env`，
+  - 同理开发环境：`.env.development.example -> .env.development` 
+  - 生产：`.env.development.example -> .env.production`
+  
 - sql 文件：[/deploy/sql/nest_admin.sql](https://github.com/zeeklog/nuct/tree/main/deploy/sql/nest_admin.sql) 用于数据库初始化
 - 项目相关配置，如：配置 mysql 和 redis 连接
-  - 公共配置: [.env](https://github.com/zeeklog/nuct/blob/main/.env)
-  - 开发环境: [.env.development](https://github.com/zeeklog/nuct/blob/main/.env.development)
-  - 生产环境: [.env.production](https://github.com/zeeklog/nuct/blob/main/.env.production)
+  - 公共配置: [.env](https://github.com/zeeklog/nuct/blob/main/.env.example)
+  - 开发环境: [.env.development](https://github.com/zeeklog/nuct/blob/main/.env.development.example)
+  - 生产环境: [.env.production](https://github.com/zeeklog/nuct/blob/main/.env.production.example)
 
 ## 环境要求
 
