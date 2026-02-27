@@ -97,6 +97,7 @@
   .menu-container {
     width: 100%;
     overflow: auto;
+    background: transparent;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -110,6 +111,86 @@
     & > :deep(.ant-menu) {
       justify-content: center;
       width: 100%;
+      border-inline-end: none !important;
+      background: transparent;
+
+      // 菜单项基础样式
+      .ant-menu-item,
+      .ant-menu-submenu-title {
+        height: 48px !important;
+        line-height: 48px !important;
+        margin: 4px 12px !important;
+        width: calc(100% - 24px) !important;
+        border-radius: 12px !important;
+        color: #64748b !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+          color: #8b5cf6 !important;
+          background: rgba(139, 92, 246, 0.08) !important;
+        }
+
+        .ant-menu-item-icon,
+        .anticon {
+          font-size: 18px !important;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover .ant-menu-item-icon {
+          transform: scale(1.1);
+        }
+      }
+
+      // 选中状态
+      .ant-menu-item-selected {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%) !important;
+        color: #8b5cf6 !important;
+        font-weight: 600;
+
+        &::after {
+          display: none;
+        }
+
+        .ant-menu-item-icon {
+          color: #8b5cf6 !important;
+        }
+      }
+
+      // 子菜单展开状态
+      .ant-menu-submenu-open > .ant-menu-submenu-title {
+        color: #8b5cf6 !important;
+        font-weight: 500;
+      }
+
+      // 收起状态样式
+      &.ant-menu-inline-collapsed {
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+          margin: 4px 8px !important;
+          width: calc(100% - 16px) !important;
+          padding: 0 calc(50% - 9px) !important;
+        }
+      }
+    }
+  }
+
+  // 深色模式适配
+  :global(.dark) {
+    .menu-container > :deep(.ant-menu) {
+      .ant-menu-item,
+      .ant-menu-submenu-title {
+        color: #94a3b8 !important;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.15) !important;
+          color: #a78bfa !important;
+        }
+      }
+
+      .ant-menu-item-selected {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%) !important;
+        color: #a78bfa !important;
+      }
     }
   }
 </style>

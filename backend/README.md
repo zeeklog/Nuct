@@ -171,13 +171,9 @@ pnpm migration:revert
 
 ## 系统截图
 
-![](https://s1.ax1x.com/2021/12/11/oTi1nf.png)
+![](../examples/image-1.png)
 
-![](https://s1.ax1x.com/2021/12/11/oTithj.png)
-
-![](https://s1.ax1x.com/2021/12/11/oTirHU.png)
-
-![](https://s1.ax1x.com/2021/12/11/oTia3n.png)
+![](../examples/image-2.png)
 
 ### 欢迎 Star && PR
 

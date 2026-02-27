@@ -82,6 +82,12 @@ const getValues = computed<RenderCallbackParams>(() => {
   }
 })
 
+/** 合并 baseColProps 与 schema.colProps，确保响应式栅格生效 */
+const getColProps = computed(() => {
+  const { baseColProps = {} } = unref(formPropsRef)
+  return { ...baseColProps, ...(schema.value.colProps || {}) }
+})
+
 const getShow = computed<{ isShow: boolean, isIfShow: boolean }>(() => {
   const { vShow, vIf, isAdvanced = false } = unref(schema)
   const { showAdvancedButton } = unref(formPropsRef)
@@ -419,7 +425,7 @@ watch(
 </script>
 
 <template>
-  <Col v-if="getShow.isIfShow" v-show="getShow.isShow" v-bind="schema.colProps">
+  <Col v-if="getShow.isIfShow" v-show="getShow.isShow" v-bind="getColProps">
     <Divider v-if="schema.component === 'Divider'" v-bind="Object.assign(getComponentProps)">
       <component :is="renderLabelHelpMessage" />
     </Divider>

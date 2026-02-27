@@ -20,26 +20,6 @@
         <TabsOperator :tab-item="route" :is-extra="true" />
       </template>
     </a-tabs>
-    <div class="tabs-view-content" :style="{ overflow }">
-      <router-view v-slot="{ Component }">
-        <template v-if="Component">
-          <Suspense>
-            <Transition
-              :name="transitionName"
-              mode="out-in"
-              appear
-              @before-leave="overflow = 'hidden'"
-              @after-leave="overflow = 'auto'"
-            >
-              <keep-alive :include="keepAliveComponents">
-                <component :is="Component" :key="route.fullPath" />
-              </keep-alive>
-            </Transition>
-            <template #fallback> 正在加载... </template>
-          </Suspense>
-        </template>
-      </router-view>
-    </div>
   </div>
 </template>
 
@@ -48,30 +28,16 @@
   import { useRoute, useRouter } from 'vue-router';
   import TabsOperator from './tabs-operator.vue';
   import { useTabsViewStore } from '@/store/modules/tabsView';
-  import { useKeepAliveStore } from '@/store/modules/keepAlive';
 
   type TabsOperatorInstance = InstanceType<typeof TabsOperator>;
 
   const route = useRoute();
   const router = useRouter();
   const tabsViewStore = useTabsViewStore();
-  const keepAliveStore = useKeepAliveStore();
 
   const itemRefs: Recordable<TabsOperatorInstance | null> = {};
 
-  // 解决路由切换动画出现滚动条闪烁问题
-  const overflow = ref('auto');
   const activeKey = computed(() => tabsViewStore.getCurrentTab?.fullPath);
-  // 缓存的路由组件列表
-  const keepAliveComponents = computed(() => keepAliveStore.list);
-  /** 过渡动画 */
-  const transitionName = computed(() => {
-    const name = route.meta?.transitionName;
-    if (name === false) {
-      return '';
-    }
-    return name ?? 'fade-slide';
-  });
 
   // tabs 编辑（remove || add）
   const editTabItem = (targetKey: string, action: string) => {
@@ -86,23 +52,60 @@
 </script>
 
 <style lang="less" scoped>
-  .dark .tabs-view {
-    border-top: 1px solid black;
-  }
-
   .tabs-view {
-    border-top: 1px solid #eee;
+    z-index: 99;
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    transition: all 0.3s;
 
     :deep(.tabs) {
       .ant-tabs-nav {
-        background-color: white;
         margin: 0;
-        padding: 4px 20px 0 10px;
+        padding: 4px 24px 0 24px;
         user-select: none;
+        background: transparent !important;
+
+        &::before {
+          border-bottom: none;
+        }
       }
 
-      .dark .ant-tabs-nav {
-        background-color: black;
+      .ant-tabs-tab {
+        background: transparent !important;
+        border: none !important;
+        margin-right: 4px !important;
+        padding: 6px 16px !important;
+        border-radius: 6px 6px 0 0 !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        color: #64748b !important;
+        position: relative;
+
+        &:hover {
+          color: #8b5cf6 !important;
+          background: rgba(139, 92, 246, 0.06) !important;
+        }
+      }
+
+      .ant-tabs-tab-active {
+        background: rgba(139, 92, 246, 0.08) !important;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 15%;
+          right: 15%;
+          height: 2px;
+          background: #8b5cf6;
+          border-radius: 2px 2px 0 0;
+        }
+
+        .ant-tabs-tab-btn {
+          color: #8b5cf6 !important;
+          font-weight: 600;
+          text-shadow: none !important;
+        }
       }
 
       .ant-tabs-tabpane {
@@ -113,42 +116,50 @@
         display: flex;
         margin: 0;
         padding: 0;
-
-        .anticon-close {
-          padding-left: 6px;
-        }
-      }
-
-      .ant-tabs-tab:not(.ant-tabs-tab-active) {
-        .ant-tabs-tab-remove {
-          width: 0;
-        }
-
-        .anticon-close {
-          visibility: hidden;
-          width: 0;
-          transition: width 0.3s;
-        }
+        color: #94a3b8;
+        transition: all 0.2s;
 
         &:hover {
-          .anticon-close {
-            visibility: visible;
-            width: 16px;
-            padding-left: 6px;
-          }
+          color: #ef4444;
+        }
 
-          .ant-tabs-tab-remove {
-            width: unset;
+        .anticon-close {
+          font-size: 10px;
+          padding-left: 4px;
+        }
+      }
+
+      .ant-tabs-extra-content {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  :global(.dark) {
+    .tabs-view {
+      background: rgba(30, 41, 59, 0.7) !important;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+
+      :deep(.tabs) {
+        .ant-tabs-tab {
+          color: #94a3b8 !important;
+          &:hover {
+            background: rgba(139, 92, 246, 0.12) !important;
+            color: #a78bfa !important;
+          }
+        }
+
+        .ant-tabs-tab-active {
+          background: rgba(139, 92, 246, 0.15) !important;
+          &::after {
+            background: #a78bfa;
+          }
+          .ant-tabs-tab-btn {
+            color: #a78bfa !important;
           }
         }
       }
-    }
-
-    .tabs-view-content {
-      /* height: calc(100vh - #{$header-height}); */
-      height: calc(100vh - 110px - var(--app-footer-height));
-      padding: 20px 14px 0;
-      overflow: auto;
     }
   }
 </style>

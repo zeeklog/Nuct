@@ -2,11 +2,13 @@
 # Nuct
 
 <p align="center">
-  <img src="assets/logo-small.png" alt="Nuct Logo" width="120" />
+  <img src="examples/image-1.png" alt="Nuct Logo" width="120" />
 </p>
 
+## 你只需要关注业务，将基础设施交给Nuct！
+
 <p align="center">
-  <strong>基于 NestJs + TypeScript + TypeORM + Redis + MySql + Vue3 + Ant Design Vue 的企业级前后端分离快速开发脚手架</strong>
+  <strong>基于 NestJs +Vue3的企业级前后端分离快速开发脚手架</strong>
 </p>
 
 <p align="center">
@@ -168,10 +170,8 @@ pnpm migration:revert   # 回滚
 
 ## 系统截图 📸
 
-![](https://s1.ax1x.com/2021/12/11/oTi1nf.png)
-![](https://s1.ax1x.com/2021/12/11/oTithj.png)
-![](https://s1.ax1x.com/2021/12/11/oTirHU.png)
-![](https://s1.ax1x.com/2021/12/11/oTia3n.png)
+![](examples/image-1.png)
+![](examples/image-2.png)
 
 ## 贡献 🤝
 

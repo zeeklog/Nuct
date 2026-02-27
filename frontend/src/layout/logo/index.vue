@@ -1,6 +1,6 @@
 <template>
-  <div class="logo">
-    <img src="~@/assets/images/logo-small.png" alt="" />
+  <div class="logo" :class="{ collapsed }">
+    <img src="~@/assets/images/logo.png" alt="logo" />
   </div>
 </template>
 
@@ -15,25 +15,35 @@
 <style lang="less" scoped>
   .logo {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    width: 200px;
+    padding: 12px;
     overflow: hidden;
     white-space: nowrap;
-    align-items: center;
+    transition: all 0.3s;
 
-    width: 100%;
-    height: 64px;
-    padding-left: 24px;
-    line-height: 64px;
-    text-align: center;
+    &.collapsed {
+      padding: 12px 0;
+    }
 
     img {
-      height: 32px;
-      margin-right: 8px;
+      height: 100px;
+      width: 200px;
+      transition: all 0.3s;
     }
 
     .title {
+      margin-left: 12px;
       margin-bottom: 0;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 1.25rem;
-      color: var(--app-primary-color);
+      font-weight: 700;
+      color: #8b5cf6;
+      background: linear-gradient(to right, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   }
 </style>

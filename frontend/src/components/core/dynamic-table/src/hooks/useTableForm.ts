@@ -21,14 +21,24 @@ export function useTableForm(payload: UseTableFormPayload) {
   const getFormProps = computed((): SchemaFormProps => {
     const { formProps } = unref(innerPropsRef)
     const { submitButtonOptions } = formProps || {}
+    const schemas = unref(formSchemas)
     return {
-      showAdvancedButton: true,
+      showAdvancedButton: schemas.length > 3,
       layout: 'horizontal',
       labelWidth: 100,
-      schemas: unref(formSchemas),
+      schemas,
       ...formProps,
       submitButtonOptions: { loading: unref(loadingRef), ...submitButtonOptions },
-      compact: true,
+      compact: false,
+      baseColProps: {
+        xs: 24,
+        sm: 24,
+        md: 24,
+        lg: 12,
+        xl: 8,
+        xxl: 8,
+      },
+      rowProps: { gutter: [16, 0] },
     }
   })
 
@@ -46,9 +56,6 @@ export function useTableForm(payload: UseTableFormPayload) {
           field: n.searchField ?? ([] as string[]).concat(getColumnKey(n)).join('.'),
           component: 'Input',
           label: n.title as string,
-          colProps: {
-            span: 8,
-          },
           ...n.formItemProps,
         } as FormSchema
       })

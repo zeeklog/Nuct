@@ -39,3 +39,9 @@ alwaysApply: false
 
 ## logo
 - 使用`frontend/assets/image/logo-small.png`作为默认的项目logo
+
+## 设计风格和颜色系统约束
+- 参考： `frontend/DESIGN_SYSTEM.md`
+
+## 项目名约束
+- Nuct 企业级开发平台

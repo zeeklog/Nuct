@@ -55,15 +55,19 @@ export const useAdvanced = (payload: UseAdvancedPayload) => {
 
     const mdWidth =
       parseInt(itemCol.md as string) ||
-      parseInt(itemCol.xs as string) ||
       parseInt(itemCol.sm as string) ||
+      parseInt(itemCol.xs as string) ||
       (itemCol.span as number) ||
       BASIC_COL_LEN;
 
     const lgWidth = parseInt(itemCol.lg as string) || mdWidth;
     const xlWidth = parseInt(itemCol.xl as string) || lgWidth;
     const xxlWidth = parseInt(itemCol.xxl as string) || xlWidth;
-    if (width <= screenEnum.LG) {
+    if (width < screenEnum.SM) {
+      itemColSum += parseInt(itemCol.xs as string) || (itemCol.span as number) || BASIC_COL_LEN;
+    } else if (width < screenEnum.MD) {
+      itemColSum += parseInt(itemCol.sm as string) || (itemCol.span as number) || BASIC_COL_LEN;
+    } else if (width < screenEnum.LG) {
       itemColSum += mdWidth;
     } else if (width < screenEnum.XL) {
       itemColSum += lgWidth;

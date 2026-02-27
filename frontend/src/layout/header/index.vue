@@ -46,7 +46,7 @@
             </Menu>
           </template>
         </Dropdown>
-        <ProjectSetting />
+        <!-- <ProjectSetting /> -->
       </Space>
     </div>
     <Modal
@@ -173,22 +173,99 @@
   .layout-header {
     display: flex;
     position: sticky;
-    z-index: 10;
+    z-index: 100;
     top: 0;
     align-items: center;
     justify-content: space-between;
     height: var(--app-header-height);
-    padding: 0 20px;
+    padding: 0 24px;
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+
+      .menu-fold {
+        font-size: 18px;
+        color: #64748b;
+        padding: 8px;
+        border-radius: 8px;
+        transition: all 0.2s;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.08);
+          color: #8b5cf6;
+        }
+      }
+    }
 
     .header-right {
       min-width: 180px;
-      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      :deep(.ant-space-item) {
+        display: flex;
+        align-items: center;
+        color: #64748b;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          color: #8b5cf6;
+        }
+      }
+
+      :deep(.ant-avatar) {
+        border: 2px solid #fff;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+        transition: all 0.3s;
+
+        &:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+      }
     }
 
     .header-menu {
       flex: 1;
       align-items: center;
       min-width: 0;
+      padding: 0 24px;
+    }
+  }
+
+  :deep(.ant-tabs-nav) {
+    margin-bottom: 0 !important;
+  }
+
+  :global(.dark) {
+    .layout-header {
+      background: rgba(30, 41, 59, 0.7) !important;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+
+      .header-left .menu-fold {
+        color: #94a3b8;
+        &:hover {
+          background: rgba(139, 92, 246, 0.15);
+          color: #a78bfa;
+        }
+      }
+
+      .header-right :deep(.ant-space-item) {
+        color: #94a3b8;
+        &:hover {
+          color: #a78bfa;
+        }
+      }
     }
   }
 </style>

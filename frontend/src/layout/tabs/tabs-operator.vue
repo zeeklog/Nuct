@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, unref } from 'vue';
   import {
-    DownOutlined,
+    DownCircleFilled,
     ReloadOutlined,
     CloseOutlined,
     VerticalRightOutlined,
@@ -126,7 +126,7 @@
 <template>
   <a-dropdown :trigger="[isExtra ? 'click' : 'contextmenu']">
     <a v-if="isExtra" class="ant-dropdown-link" @click.prevent>
-      <down-outlined :style="{ fontSize: '20px' }" />
+      <DownCircleFilled :style="{ fontSize: '15px', width: '15px', height: '10px' }" />
     </a>
     <div v-else style="display: inline-block">
       <TitleI18n :title="tabItem.meta?.title" />

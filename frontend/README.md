@@ -81,9 +81,9 @@ pnpm build
 
 | 微信 | 支付宝 |
 | :-: | :-: |
-| <img src="https://cdn.jsdelivr.net/gh/buqiyuan/MyImageHosting/imgs/vue3-antdv-admin/weixin.jpg" height="220" /> | <img src="https://cdn.jsdelivr.net/gh/buqiyuan/MyImageHosting/imgs/vue3-antdv-admin/zhifubao.jpg" height="220" /> |
+| <img src="../examples/image-1.png" height="220" /> | <img src="../examples/image-2.png" height="220" /> |
 
 ## 感谢 JetBrains 免费的开源授权
 
 <a href="https://www.jetbrains.com/?from=Mybatis-PageHelper" target="_blank">
-<img src="https://user-images.githubusercontent.com/1787798/69898077-4f4e3d00-138f-11ea-81f9-96fb7c49da89.png" height="200"/></a>
+<img src="../examples/image-1.png" height="200"/></a>

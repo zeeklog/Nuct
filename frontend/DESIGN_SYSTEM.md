@@ -1,4 +1,4 @@
-# Nest Admin 登录页设计规范 (Design System)
+# Nuct 登录页设计规范 (Design System)
 
 本文档总结了 `frontend/src/views/login/index.vue` 登录页面的设计风格、颜色系统及交互规范。
 
