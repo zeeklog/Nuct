@@ -11,6 +11,7 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genTokenBlacklistKey } from '~/helper/genRedisKey'
 
 import { UserService } from '~/modules/user/user.service'
+import { TenantContextService } from '~/modules/tenant/tenant-context.service'
 
 import { md5 } from '~/utils'
 
@@ -29,6 +30,7 @@ export class AuthService {
     private userService: UserService,
     private loginLogService: LoginLogService,
     private tokenService: TokenService,
+    private tenantContext: TenantContextService,
     @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
     @Inject(AppConfig.KEY) private appConfig: IAppConfig,
   ) {}
@@ -81,7 +83,8 @@ export class AuthService {
     // 设置密码版本号 当密码修改时，版本号+1
     await this.redis.set(genAuthPVKey(user.id), 1)
 
-    // 设置菜单权限
+    // 登录时设置租户上下文，确保 getPermissions 按用户所属租户查询菜单权限
+    this.tenantContext.setTenantId(user.tenantId ?? 1)
     const permissions = await this.menuService.getPermissions(user.id)
     await this.setPermissionsCache(user.id, permissions)
 

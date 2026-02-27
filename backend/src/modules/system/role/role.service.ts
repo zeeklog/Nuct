@@ -112,10 +112,11 @@ export class RoleService {
    */
   async update(id, { menuIds, ...data }: RoleUpdateDto): Promise<void> {
     await this.roleRepository.update(id, data)
+    const tenantId = this.tenantContext.getTenantId()
     await this.entityManager.transaction(async (manager) => {
       const role = await this.roleRepository.findOne({ where: { id } })
       role.menus = menuIds?.length
-        ? await this.menuRepository.findBy({ id: In(menuIds) })
+        ? await this.menuRepository.findBy({ id: In(menuIds), tenantId })
         : []
       await manager.save(role)
     })

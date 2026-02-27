@@ -201,12 +201,13 @@ export class MenuService {
         .andWhere('role.id IN (:...roleIds)', { roleIds })
         .andWhere('menu.type IN (1,2)')
         .andWhere('menu.permission IS NOT NULL')
+        .andWhere("menu.permission != ''")
         .getMany()
     }
     if (!isEmpty(result)) {
       result.forEach((e) => {
         if (e.permission)
-          permission = concat(permission, e.permission.split(','))
+          permission = concat(permission, e.permission.split(',').map(p => p.trim()).filter(Boolean))
       })
       permission = uniq(permission)
     }

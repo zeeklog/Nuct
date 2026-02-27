@@ -23,7 +23,7 @@ export class RoleDto extends OperatorDto {
   @IsUnique({ entity: RoleEntity })
   @ApiProperty({ description: '角色标识' })
   @IsString()
-  @Matches(/^[a-z0-9]+$/i, { message: '角色值只能包含字母和数字' })
+  @Matches(/^[a-z0-9_-]+$/i, { message: '角色值只能包含字母、数字、下划线和短横线' })
   @MinLength(2, { message: '角色值长度不能小于2' })
   value: string
 
