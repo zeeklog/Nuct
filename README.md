@@ -74,7 +74,6 @@ nuct/
 ## 快速链接 🔗
 
 - **在线预览**：<http://nuct.cn>
-- **项目文档**：<https://buqiyuan.github.io/vue3-antdv-admin-docs/>
 - **GitHub 仓库**：<https://github.com/zeeklog/nuct>（部署后访问 `/api-docs/` 查看 Swagger 文档）
 - **Gitee 仓库**：<https://gitee.com/zeeklog/nuct>
 
