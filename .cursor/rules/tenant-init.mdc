@@ -1,0 +1,26 @@
+---
+description: 租户初始化逻辑说明
+globs: src/modules/tenant/**/*.ts
+alwaysApply: false
+---
+
+# 租户初始化规则
+
+新建租户时，`TenantInitService.initForTenant(tenantId)` 会按模板顺序初始化部门、菜单、角色、权限。所有数据 `tenant_id` 均设为新租户 ID。
+
+## 初始化顺序
+
+1. **部门**：按 `tenant-dept.template.ts` 插入（模板来源：nest_admin.sql 85-95 行）
+2. **菜单**：按 `tenant-menu.template.ts` 插入（模板来源：nest_admin.sql 228-313 行）
+3. **租户管理员角色**：拥有全部菜单
+4. **普通用户角色**：拥有「关于」「文档」及其子菜单
+
+## 模板结构
+
+- **部门模板**：`id`、`parentId`、`name`、`orderNo`；插入时需按 parent 顺序，用 `idMap` 映射 `parentId`
+- **菜单模板**：`id`、`parentId`、`path`、`name`、`permission`、`type`、`icon`、`orderNo`、`component` 等；同上
+
+## 关键实现
+
+- 使用 `sortDeptTemplateByParent` / `sortTemplateByParent` 保证父节点先于子节点插入
+- 插入时用 `idMap` 将模板 id 映射为新生成的 id，用于设置 `parentId`

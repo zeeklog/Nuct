@@ -1,0 +1,27 @@
+{
+  "name": "nest-admin",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.10.0",
+  "description": "基于 NestJS + Vue3 的前后端分离权限管理系统",
+  "scripts": {
+    "install:all": "pnpm install",
+    "dev": "pnpm concurrently \"pnpm --filter nuct dev\" \"pnpm --filter vue3-antdv-admin dev\"",
+    "dev:backend": "pnpm --filter nuct dev",
+    "dev:frontend": "pnpm --filter vue3-antdv-admin dev",
+    "build": "pnpm concurrently \"pnpm build:backend\" \"pnpm build:frontend\"",
+    "build:backend": "pnpm --filter nuct build",
+    "build:frontend": "pnpm --filter vue3-antdv-admin build",
+    "migration:run": "pnpm --filter nuct migration:run",
+    "migration:generate": "pnpm --filter nuct migration:generate",
+    "docker:up": "pnpm --filter nuct docker:up",
+    "docker:down": "pnpm --filter nuct docker:down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10"
+  }
+}
