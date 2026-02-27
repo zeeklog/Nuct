@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/assets/images/logo-small.png" alt="Nuct Logo" width="120" />
+  <img src="src/assets/images/logo-small.png" alt="Nuct Logo" width="200" />
   </p>
 
 <p align="center">

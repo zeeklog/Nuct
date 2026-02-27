@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/logo-small.png" alt="Nuct Logo" width="120" />
+  <img src="assets/logo-small.png" alt="Nuct Logo" width="200" />
 
 <p align="center">
   <strong>你只需要关注业务，将基础设施交给Nuct！</strong>
