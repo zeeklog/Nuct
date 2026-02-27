@@ -4,7 +4,7 @@
 
 **基于 NestJs + TypeScript + TypeORM + Redis + MySql + Vue3 + Ant Design Vue 编写的一款前后端分离的、支持多租户的、支持RABC权限管理的企业级快速开发脚手架。希望这个项目在全栈的路上能够帮助到你。**
 
-- 中小型应用开发、接私活快速开发神器
+- 中小型应用开发快速开发神器
 - 已配置Cursor rules，接入AI进行快速开发交付
 
 ## 项目结构
