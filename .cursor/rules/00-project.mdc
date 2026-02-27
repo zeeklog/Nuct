@@ -1,16 +1,16 @@
 ---
-description: Nest-admin 项目架构与整体规范
+description: Nuct 项目架构与整体规范
 alwaysApply: true
 ---
 
-# Nest-admin 项目架构
+# Nuct 项目架构
 
-基于 [Nest_admin](https://github.com/buqiyuan/nest-admin) 与 [vue3-antdv-admin](https://github.com/buqiyuan/vue3-antdv-admin) 整合的前后端一体企业级后台脚手架。支持 RBAC 权限、多租户、单点登录。
+基于 [Nuct](https://github.com/zeeklog/nuct) & [Nest-admin] 整合的前后端一体企业级后台脚手架。支持 RBAC 权限、多租户、单点登录。
 
 ## 项目结构
 
 ```
-nest-admin/
+nuct/
 ├── backend/          # NestJS 后端 (端口 7001)
 │   ├── src/
 │   │   ├── modules/      # 业务模块

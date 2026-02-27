@@ -57,7 +57,7 @@ export const useEditable = (payload: UseEditablePayload) => {
       const { formItemProps, editFormItemProps } = item;
       const field = (item.dataIndex || item.key) as string;
 
-      // https://github.com/buqiyuan/vue3-antdv-admin/issues/194
+      // https://github.com/zeeklog/nuct/issues/194
       if (!Reflect.has(editValue, field)) {
         Reflect.set(editValue, field, undefined);
       }

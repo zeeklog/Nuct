@@ -1,4 +1,4 @@
 [submodule "docs"]
 	path = docs
-	url = https://github.com/buqiyuan/vue3-antdv-admin-docs.git
+	url = https://github.com/zeeklog/nuct-docs.git
 	branch = main

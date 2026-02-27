@@ -211,7 +211,7 @@ pnpm migration:revert   # 回滚
 
 基于 buqiyuan 开源的 Nest_admin 二次开发租户隔离：
 
-- [vue3-antdv-admin](https://github.com/buqiyuan/vue3-antdv-admin) - 前端模板
+- [vue3-antdv-admin](https://github.com/zeeklog/nuct) - 前端模板
 - [sf-nest-admin](https://github.com/hackycy/sf-nest-admin)
 
 ## LICENSE
