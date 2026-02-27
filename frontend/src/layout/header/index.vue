@@ -133,6 +133,7 @@
     userStore.fetchPermsAndMenus();
     message.success(`已切换到租户：${t.name}`);
     tenantSwitchVisible.value = false;
+    window.location.reload();
   };
   const route = useRoute();
   const userInfo = computed(() => userStore.userInfo);

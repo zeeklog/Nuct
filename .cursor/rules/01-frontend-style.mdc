@@ -1,0 +1,13 @@
+# 前端开发规范
+
+## CSS 框架
+
+- **强制要求使用 Tailwind CSS**：本项目已全面集成 Tailwind CSS，所有 UI 布局和样式应优先使用 Tailwind CSS 的原子类实现。
+- **避免使用内联样式**：除非是动态计算的样式，否则应使用 Tailwind CSS 类。
+- **Ant Design Vue 兼容性**：Tailwind CSS 的 `preflight` 已禁用，以避免与 Ant Design Vue 的基础样式冲突。
+- **UnoCSS**：本项目同时存在 UnoCSS，但新代码应优先使用 Tailwind CSS。
+
+## 命名规范
+
+- 组件名：大驼峰命名 (PascalCase)
+- 文件名：小写字母，单词间用连字符分隔 (kebab-case)

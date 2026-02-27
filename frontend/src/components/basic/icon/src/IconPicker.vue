@@ -104,16 +104,18 @@
 
 <style lang="less" scoped>
   .select-box {
-    @apply h-300px min-w-350px;
+    height: 300px;
+    min-width: 350px;
 
     &-item {
-      @apply flex m-2px p-6px;
-
+      display: flex;
+      margin: 2px;
+      padding: 6px;
       border: 1px solid #e5e7eb;
 
       &:hover,
       &.active {
-        @apply border-blue-600;
+        border-color: #2563eb;
       }
     }
   }

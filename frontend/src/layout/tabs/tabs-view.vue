@@ -95,11 +95,14 @@
 
     :deep(.tabs) {
       .ant-tabs-nav {
-        @apply bg-white dark:bg-black;
-
+        background-color: white;
         margin: 0;
         padding: 4px 20px 0 10px;
         user-select: none;
+      }
+
+      .dark .ant-tabs-nav {
+        background-color: black;
       }
 
       .ant-tabs-tabpane {

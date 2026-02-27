@@ -180,7 +180,8 @@
 
 <style lang="less" scoped>
   .check-item {
-    @apply flex justify-between;
+    display: flex;
+    justify-content: space-between;
   }
 
   .column-fixed {

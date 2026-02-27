@@ -1,4 +1,5 @@
 import 'uno.css';
+import '@/styles/tailwind.css';
 import 'virtual:svg-icons-register';
 import '@/styles/index.less';
 

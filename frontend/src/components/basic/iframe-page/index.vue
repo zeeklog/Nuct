@@ -31,7 +31,8 @@
     transform: translate(0);
 
     :deep(div[class^='ant-spin']) {
-      @apply wh-full;
+      width: 100%;
+      height: 100%;
     }
   }
 </style>
