@@ -5,7 +5,7 @@
 ## 你只需要关注业务，将基础设施交给Nuct！
 
 <p align="center">
-  <strong>基于 NestJs +Vue3的企业级前后端分离快速开发脚手架</strong>
+  <strong>基于 NestJs +Vue3的企业级前后端分离快速开发脚手架， 将你的基础工作交给Cursor Rules & Skills</strong>
 </p>
 
 <p align="center">
@@ -42,6 +42,7 @@
 - [子项目说明](#子项目说明)
 - [数据库迁移](#数据库迁移)
 - [系统截图](#系统截图)
+- [Cursor AI 开发规则](#cursor-ai-开发规则)
 - [贡献](#贡献)
   - [Git 提交规范](#git-提交规范)
 - [致谢](#致谢)
@@ -171,23 +172,39 @@ pnpm migration:revert   # 回滚
 
 > 若实体类或数据库配置有更新，请先执行 `pnpm build` 再进行迁移。
 
+## Cursor AI 开发规则
+
+项目已配置 Cursor Rules 与 Skills，便于 AI 辅助开发。规则与技能文件位于 `.cursor/` 目录。
+
+### 规则文件 (Rules)
+
+| 文件 | 说明 | 作用范围 |
+|------|------|----------|
+| `rules/00-project.mdc` | 项目架构与整体规范 | 始终应用 |
+| `rules/01-frontend-style.mdc` | 前端 CSS 与命名规范 | 前端 |
+| `rules/01-data-design.mdc` | 数据库设计与 RBAC 权限模型 | 后端 |
+| `rules/02-backend.mdc` | NestJS 后端开发规范 | `backend/**/*.ts` |
+| `rules/03-frontend.mdc` | Vue3 前端开发规范 | `frontend/**/*.{ts,vue}` |
+| `rules/04-backend-docs.mdc` | 后端文档与 API 参考 | 后端 |
+| `rules/tenant-init.mdc` | 租户初始化逻辑 | `tenant/**/*.ts` |
+
+### 技能 (Skills)
+
+| 技能 | 路径 | 用途 |
+|------|------|------|
+| nest-admin-backend | `skills/nest-admin-backend/SKILL.md` | 后端开发、新增接口、控制器、Service、权限、数据库迁移 |
+| nest-admin-crud | `skills/nest-admin-crud/SKILL.md` | 新增 CRUD 模块全流程（实体、DTO、Service、Controller、菜单、前端页面） |
+| nest-admin-permission | `skills/nest-admin-permission/SKILL.md` | RBAC 权限、菜单、按钮权限、`definePermission`、`sys_menu` 配置 |
+
+### 使用示例
+
+- **开发后端接口**：引用 `nest-admin-backend` skill 或 `02-backend.mdc` 规则
+- **新增 CRUD 模块**：引用 `nest-admin-crud` skill
+- **配置权限与菜单**：引用 `nest-admin-permission` skill
 
 ## 贡献 🤝
 
 欢迎 Star 和 PR。
-
-### Git 提交规范
-
-参考 [Angular 规范](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular)：
-
-- `feat` 新功能
-- `fix` 修复 BUG
-- `docs` 文档
-- `style` 代码风格
-- `refactor` 重构
-- `perf` 性能优化
-- `test` 测试
-- `chore` 构建/依赖等
 
 ## 致谢 🙏
 

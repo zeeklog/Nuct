@@ -163,7 +163,7 @@ pnpm migration:revert
 ### 致谢
 
 - [sf-nuct](https://github.com/hackycy/sf-nuct)
-- [nuct](https://github.com/zeeklog/nuct)
+- [buqiyuan](https://github.com/buqiyuan/nest-admin)
 
 ### LICENSE
 
