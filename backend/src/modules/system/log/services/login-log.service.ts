@@ -6,6 +6,7 @@ import { Between, LessThan, Like, Repository } from 'typeorm'
 import {UAParser} from 'ua-parser-js'
 
 import { paginateRaw } from '~/helper/paginate'
+import { TenantContextService } from '~/modules/tenant/tenant-context.service'
 
 import { getIpAddress } from '~/utils/ip.util'
 
@@ -32,17 +33,19 @@ export class LoginLogService {
   constructor(
     @InjectRepository(LoginLogEntity)
     private loginLogRepository: Repository<LoginLogEntity>,
-
+    private tenantContext: TenantContextService,
   ) {}
 
-  async create(uid: number, ip: string, ua: string): Promise<void> {
+  async create(uid: number, ip: string, ua: string, tenantId?: number): Promise<void> {
     try {
       const address = await getIpAddress(ip)
+      const tid = tenantId ?? this.tenantContext.getTenantId()
 
       await this.loginLogRepository.save({
         ip,
         ua,
         address,
+        tenantId: tid,
         user: { id: uid },
       })
     }
@@ -59,20 +62,22 @@ export class LoginLogService {
     address,
     time,
   }: LoginLogQueryDto) {
-    const queryBuilder = await this.loginLogRepository
+    const tenantId = this.tenantContext.getTenantId()
+    const queryBuilder = this.loginLogRepository
       .createQueryBuilder('login_log')
       .innerJoinAndSelect('login_log.user', 'user')
-      .where({
-        ...(ip && { ip: Like(`%${ip}%`) }),
-        ...(address && { address: Like(`%${address}%`) }),
-        ...(time && { createdAt: Between(time[0], time[1]) }),
-        ...(username && {
-          user: {
-            username: Like(`%${username}%`),
-          },
-        }),
-      })
-      .orderBy('login_log.created_at', 'DESC')
+      .where('login_log.tenantId = :tenantId', { tenantId })
+
+    if (ip)
+      queryBuilder.andWhere('login_log.ip LIKE :ip', { ip: `%${ip}%` })
+    if (address)
+      queryBuilder.andWhere('login_log.address LIKE :address', { address: `%${address}%` })
+    if (time)
+      queryBuilder.andWhere('login_log.created_at BETWEEN :time0 AND :time1', { time0: time[0], time1: time[1] })
+    if (username)
+      queryBuilder.andWhere('user.username LIKE :username', { username: `%${username}%` })
+
+    queryBuilder.orderBy('login_log.created_at', 'DESC')
 
     const { items, ...rest } = await paginateRaw<LoginLogEntity>(queryBuilder, {
       page,
@@ -91,10 +96,15 @@ export class LoginLogService {
   }
 
   async clearLog(): Promise<void> {
-    await this.loginLogRepository.clear()
+    const tenantId = this.tenantContext.getTenantId()
+    await this.loginLogRepository.delete({ tenantId })
   }
 
   async clearLogBeforeTime(time: Date): Promise<void> {
-    await this.loginLogRepository.delete({ createdAt: LessThan(time) })
+    const tenantId = this.tenantContext.getTenantId()
+    await this.loginLogRepository.delete({
+      tenantId,
+      createdAt: LessThan(time),
+    })
   }
 }

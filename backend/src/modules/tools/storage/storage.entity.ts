@@ -5,6 +5,9 @@ import { CommonEntity } from '~/common/entity/common.entity'
 
 @Entity({ name: 'tool_storage' })
 export class Storage extends CommonEntity {
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
   @Column({ type: 'varchar', length: 200, comment: '文件名' })
   @ApiProperty({ description: '文件名' })
   name: string

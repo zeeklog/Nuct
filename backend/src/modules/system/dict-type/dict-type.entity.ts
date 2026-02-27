@@ -5,11 +5,14 @@ import { CompleteEntity } from '~/common/entity/common.entity'
 
 @Entity({ name: 'sys_dict_type' })
 export class DictTypeEntity extends CompleteEntity {
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
   @Column({ type: 'varchar', length: 50 })
   @ApiProperty({ description: '字典名称' })
   name: string
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'varchar', length: 50 })
   @ApiProperty({ description: '字典编码' })
   code: string
 

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { TenantModule } from '../../tenant/tenant.module'
 import { UserModule } from '../../user/user.module'
 import { RoleModule } from '../role/role.module'
 
@@ -11,7 +12,7 @@ import { DeptService } from './dept.service'
 const services = [DeptService]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DeptEntity]), UserModule, RoleModule],
+  imports: [TypeOrmModule.forFeature([DeptEntity]), TenantModule, UserModule, RoleModule],
   controllers: [DeptController],
   providers: [...services],
   exports: [TypeOrmModule, ...services],

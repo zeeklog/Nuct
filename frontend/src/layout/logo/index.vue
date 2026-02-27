@@ -1,7 +1,6 @@
 <template>
   <div class="logo">
-    <img src="~@/assets/images/logo.png" alt="" />
-    <h2 v-show="!collapsed" class="title">One Piece</h2>
+    <img src="~@/assets/images/logo-small.png" alt="" />
   </div>
 </template>
 
@@ -17,9 +16,11 @@
   .logo {
     @apply flex overflow-hidden whitespace-nowrap items-center;
 
+    width: 100%;
     height: 64px;
     padding-left: 24px;
     line-height: 64px;
+    text-align: center;
 
     img {
       height: 32px;

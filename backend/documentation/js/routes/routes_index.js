@@ -1,1 +1,0 @@
-var ROUTES_INDEX = {"name":"<root>","kind":"module","children":[{"name":"NetdiskModule","kind":"module","filename":"src/modules/netdisk/netdisk.module.ts"},{"name":"SystemModule","kind":"module","filename":"src/modules/system/system.module.ts"},{"name":"ToolsModule","kind":"module","filename":"src/modules/tools/tools.module.ts"}]}

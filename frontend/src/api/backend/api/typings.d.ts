@@ -349,6 +349,8 @@ declare namespace API {
   };
 
   type LoginDto = {
+    /** 租户编码，不传则使用默认租户 */
+    tenantCode?: string;
     /** 手机号/邮箱 */
     username: string;
     /** 密码 */
@@ -357,6 +359,38 @@ declare namespace API {
     captchaId: string;
     /** 用户输入的验证码 */
     verifyCode: string;
+  };
+
+  type TenantEntity = {
+    id: number;
+    name: string;
+    code: string;
+    status: number;
+    remark?: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  type TenantDto = {
+    name: string;
+    code: string;
+    status: number;
+    remark?: string;
+  };
+
+  type TenantUpdateDto = {
+    name?: string;
+    code?: string;
+    status?: number;
+    remark?: string;
+  };
+
+  type TenantListParams = {
+    page?: number;
+    pageSize?: number;
+    name?: string;
+    code?: string;
+    status?: number;
   };
 
   type LoginLogInfo = {

@@ -7,6 +7,9 @@ import { UserEntity } from '../../../user/user.entity'
 
 @Entity({ name: 'sys_login_log' })
 export class LoginLogEntity extends CommonEntity {
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
   @Column({ nullable: true })
   @ApiProperty({ description: 'IP' })
   ip: string

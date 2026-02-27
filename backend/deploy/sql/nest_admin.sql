@@ -118,6 +118,32 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
+-- Table structure for sys_dict_type
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dict_type`;
+CREATE TABLE `sys_dict_type` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `create_by` int NOT NULL COMMENT '创建者',
+  `update_by` int NOT NULL COMMENT '更新者',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `status` tinyint NOT NULL DEFAULT '1',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_74d0045ff7fab9f67adc0b1bda` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- ----------------------------
+-- Records of sys_dict_type
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_dict_type` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `name`, `status`, `remark`, `code`) VALUES (1, '2024-01-28 08:19:12.777447', '2024-02-08 13:05:10.000000', 1, 1, '性别', 1, '性别单选', 'sys_user_gender');
+INSERT INTO `sys_dict_type` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `name`, `status`, `remark`, `code`) VALUES (2, '2024-01-28 08:38:41.235185', '2024-01-29 02:11:33.000000', 1, 1, '菜单显示状态', 1, '菜单显示状态', 'sys_show_hide');
+COMMIT;
+
+-- ----------------------------
 -- Table structure for sys_dict_item
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_item`;
@@ -151,56 +177,6 @@ INSERT INTO `sys_dict_item` (`id`, `created_at`, `updated_at`, `create_by`, `upd
 COMMIT;
 
 -- ----------------------------
--- Table structure for sys_dict_type
--- ----------------------------
-DROP TABLE IF EXISTS `sys_dict_type`;
-CREATE TABLE `sys_dict_type` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `create_by` int NOT NULL COMMENT '创建者',
-  `update_by` int NOT NULL COMMENT '更新者',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` tinyint NOT NULL DEFAULT '1',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_74d0045ff7fab9f67adc0b1bda` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ----------------------------
--- Records of sys_dict_type
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_dict_type` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `name`, `status`, `remark`, `code`) VALUES (1, '2024-01-28 08:19:12.777447', '2024-02-08 13:05:10.000000', 1, 1, '性别', 1, '性别单选', 'sys_user_gender');
-INSERT INTO `sys_dict_type` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `name`, `status`, `remark`, `code`) VALUES (2, '2024-01-28 08:38:41.235185', '2024-01-29 02:11:33.000000', 1, 1, '菜单显示状态', 1, '菜单显示状态', 'sys_show_hide');
-COMMIT;
-
--- ----------------------------
--- Table structure for sys_login_log
--- ----------------------------
-DROP TABLE IF EXISTS `sys_login_log`;
-CREATE TABLE `sys_login_log` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ua` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `user_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `FK_3029712e0df6a28edaee46fd470` (`user_id`),
-  CONSTRAINT `FK_3029712e0df6a28edaee46fd470` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
-
--- ----------------------------
--- Records of sys_login_log
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for sys_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
@@ -229,6 +205,7 @@ CREATE TABLE `sys_menu` (
 -- Records of sys_menu
 -- ----------------------------
 BEGIN;
+INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (44, NULL, '/dashboard', '仪表盘', '', 1, 'ant-design:dashboard-outlined', 255, 'dashboard/index', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (1, NULL, '/system', '系统管理', '', 0, 'ant-design:setting-outlined', 254, '', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (2, 1, '/system/user', '用户管理', 'system:user:list', 1, 'ant-design:user-outlined', 0, 'system/user/index', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (3, 1, '/system/role', '角色管理', 'system:role:list', 1, 'ep:user', 1, 'system/role/index', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
@@ -265,7 +242,6 @@ INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`,
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (40, 10, '', '更新', 'system:task:update', 2, '', 0, '', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (41, 7, '', '查询登录日志', 'system:log:login:list', 2, '', 0, '', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (42, 7, '', '查询任务日志', 'system:log:task:list', 2, '', 0, '', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
-INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (43, NULL, '/about', '关于', '', 1, 'ant-design:info-circle-outlined', 260, 'account/about', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (48, NULL, '/tool', '系统工具', NULL, 0, 'ant-design:tool-outlined', 254, '', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (49, 48, '/tool/email', '邮件工具', 'system:tools:email', 1, 'ant-design:send-outlined', 1, 'tool/email/index', 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (50, 49, NULL, '发送邮件', 'tools:email:send', 2, '', 0, NULL, 0, 1, 1, '2023-11-10 00:31:44.023393', '2024-02-28 22:05:52.102649', 0, 1, NULL);
@@ -357,6 +333,7 @@ CREATE TABLE `sys_role_menus` (
 -- Records of sys_role_menus
 -- ----------------------------
 BEGIN;
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 44);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 1);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 2);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 3);
@@ -393,7 +370,6 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 39);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 40);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 41);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 42);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 43);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 48);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 49);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 50);
@@ -424,6 +400,7 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 108);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 109);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 110);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 111);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 44);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 1);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 5);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 6);
@@ -445,7 +422,6 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 39);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 40);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 41);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 42);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 43);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 48);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 49);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 50);
@@ -471,6 +447,7 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 109);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 110);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 111);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 112);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (9, 44);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (9, 1);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (9, 2);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (9, 3);
@@ -619,6 +596,30 @@ INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`
 COMMIT;
 
 -- ----------------------------
+-- Table structure for sys_login_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_login_log`;
+CREATE TABLE `sys_login_log` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ua` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `user_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_3029712e0df6a28edaee46fd470` (`user_id`),
+  CONSTRAINT `FK_3029712e0df6a28edaee46fd470` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_login_log
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
 -- Table structure for sys_user_roles
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_roles`;
@@ -655,7 +656,7 @@ CREATE TABLE `todo` (
   PRIMARY KEY (`id`),
   KEY `FK_9cb7989853c4cb7fe427db4b260` (`user_id`),
   CONSTRAINT `FK_9cb7989853c4cb7fe427db4b260` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
 -- Records of todo

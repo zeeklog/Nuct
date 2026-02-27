@@ -26,7 +26,7 @@ export function setupSwagger(
 🔷 **Base URL**: \`${serverUrl}/${globalPrefix}\` <br>
 🧾 **Swagger JSON**: [查看文档 JSON](${swaggerPath}/json)
 
-📌 [Nuct](https://github.com/zeeklog/nuct) 后台管理系统 API 文档. 在线 demo [vue3-antdv-admin.pages.dev](https://vue3-antdv-admin.pages.dev/)
+📌 [nest-admin](https://github.com/buqiyuan/nest-admin) 后台管理系统 API 文档. 在线 demo [vue3-antdv-admin.pages.dev](https://vue3-antdv-admin.pages.dev/)
     `)
     .setVersion('1.0')
     .addServer(`${serverUrl}/${globalPrefix}`, 'Base URL')

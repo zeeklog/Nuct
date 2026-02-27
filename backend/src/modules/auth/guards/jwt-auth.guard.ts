@@ -17,8 +17,10 @@ import { BusinessException } from '~/common/exceptions/biz.exception'
 import { AppConfig, IAppConfig, RouterWhiteList } from '~/config'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { genTokenBlacklistKey } from '~/helper/genRedisKey'
+import { ROOT_TENANT_ID, ROOT_USER_ID } from '~/constants/system.constant'
 
 import { AuthService } from '~/modules/auth/auth.service'
+import { TenantContextService, TENANT_ID_HEADER } from '~/modules/tenant/tenant-context.service'
 
 import { checkIsDemoMode } from '~/utils'
 
@@ -44,6 +46,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     private reflector: Reflector,
     private authService: AuthService,
     private tokenService: TokenService,
+    private tenantContext: TenantContextService,
     @InjectRedis() private readonly redis: Redis,
     @Inject(AppConfig.KEY) private appConfig: IAppConfig,
   ) {
@@ -127,6 +130,20 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
         throw new BusinessException(ErrorEnum.ACCOUNT_LOGGED_IN_ELSEWHERE)
       }
     }
+
+    // 在 Guard 阶段设置租户上下文，确保 RbacGuard 执行 getPermissions 时能拿到正确 tenantId
+    const user = request.user as { uid?: number; tenantId?: number }
+    const headerTenantId = request.headers[TENANT_ID_HEADER.toLowerCase()] as string | undefined
+    let tenantId = ROOT_TENANT_ID
+    if (user?.uid === ROOT_USER_ID && headerTenantId) {
+      const tid = Number.parseInt(headerTenantId, 10)
+      if (!Number.isNaN(tid))
+        tenantId = tid
+    }
+    else if (user?.tenantId) {
+      tenantId = user.tenantId
+    }
+    this.tenantContext.setTenantId(tenantId)
 
     return result
   }

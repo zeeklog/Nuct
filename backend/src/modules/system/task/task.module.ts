@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { ConfigKeyPaths, IRedisConfig } from '~/config'
 
+import { TenantModule } from '../../tenant/tenant.module'
 import { LogModule } from '../log/log.module'
 
 import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from './constant'
@@ -20,6 +21,7 @@ const providers = [TaskService, TaskConsumer]
 @Module({
   imports: [
     TypeOrmModule.forFeature([TaskEntity]),
+    TenantModule,
     BullModule.registerQueueAsync({
       name: SYS_TASK_QUEUE_NAME,
       useFactory: (configService: ConfigService<ConfigKeyPaths>) => ({

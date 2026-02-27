@@ -7,20 +7,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/dashboard',
     name: moduleName,
-    redirect: '/dashboard/welcome',
+    redirect: '/dashboard/index',
     meta: {
       title: t('routes.dashboard.dashboard'),
       icon: 'ant-design:dashboard-outlined',
     },
     children: [
       {
-        path: 'welcome',
-        name: `${moduleName}-welcome`,
+        path: 'index',
+        name: `${moduleName}-index`,
         meta: {
           title: t('routes.dashboard.workbench'),
           icon: 'ant-design:home-filled',
         },
-        component: () => import('@/views/dashboard/welcome/index.vue'),
+        component: () => import('@/views/dashboard/index.vue'),
       },
     ],
   },

@@ -20,7 +20,7 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-
+import { TenantContextService } from '~/modules/tenant/tenant-context.service'
 import { TaskEntity } from '~/modules/system/task/task.entity'
 import { MISSION_DECORATOR_KEY } from '~/modules/tasks/mission.decorator'
 
@@ -42,6 +42,7 @@ export class TaskService implements OnModuleInit {
     private moduleRef: ModuleRef,
     private reflector: Reflector,
     @InjectRedis() private redis: Redis,
+    private tenantContext: TenantContextService,
   ) {}
 
   /**
@@ -97,9 +98,11 @@ export class TaskService implements OnModuleInit {
     type,
     status,
   }: TaskQueryDto): Promise<Pagination<TaskEntity>> {
+    const tenantId = this.tenantContext.getTenantId()
     const queryBuilder = this.taskRepository
       .createQueryBuilder('task')
-      .where({
+      .where('task.tenantId = :tenantId', { tenantId })
+      .andWhere({
         ...(name ? { name: Like(`%${name}%`) } : null),
         ...(service ? { service: Like(`%${service}%`) } : null),
         ...(type ? { type } : null),
@@ -114,9 +117,11 @@ export class TaskService implements OnModuleInit {
    * task info
    */
   async info(id: number): Promise<TaskEntity> {
-    const task = this.taskRepository
+    const tenantId = this.tenantContext.getTenantId()
+    const task = await this.taskRepository
       .createQueryBuilder('task')
-      .where({ id })
+      .where('task.id = :id', { id })
+      .andWhere('task.tenantId = :tenantId', { tenantId })
       .getOne()
 
     if (!task)
@@ -133,7 +138,8 @@ export class TaskService implements OnModuleInit {
       throw new BadRequestException('Task is Empty')
 
     await this.stop(task)
-    await this.taskRepository.delete(task.id)
+    const tenantId = this.tenantContext.getTenantId()
+    await this.taskRepository.delete({ id: task.id, tenantId })
   }
 
   /**
@@ -152,7 +158,8 @@ export class TaskService implements OnModuleInit {
   }
 
   async create(dto: TaskDto): Promise<void> {
-    const result = await this.taskRepository.save(dto)
+    const tenantId = this.tenantContext.getTenantId()
+    const result = await this.taskRepository.save({ ...dto, tenantId })
     const task = await this.info(result.id)
     if (result.status === 0)
       await this.stop(task)
@@ -161,7 +168,8 @@ export class TaskService implements OnModuleInit {
   }
 
   async update(id: number, dto: TaskUpdateDto): Promise<void> {
-    await this.taskRepository.update(id, dto)
+    const tenantId = this.tenantContext.getTenantId()
+    await this.taskRepository.update({ id, tenantId }, dto)
     const task = await this.info(id)
     if (task.status === 0)
       await this.stop(task)
@@ -205,7 +213,7 @@ export class TaskService implements OnModuleInit {
       { jobId: task.id, removeOnComplete: true, removeOnFail: true, repeat },
     )
     if (job && job.opts) {
-      await this.taskRepository.update(task.id, {
+      await this.taskRepository.update({ id: task.id, tenantId: task.tenantId }, {
         jobOpts: JSON.stringify(job.opts.repeat),
         status: 1,
       })
@@ -213,7 +221,7 @@ export class TaskService implements OnModuleInit {
     else {
       // update status to 0，标识暂停任务，因为启动失败
       await job?.remove()
-      await this.taskRepository.update(task.id, {
+      await this.taskRepository.update({ id: task.id, tenantId: task.tenantId }, {
         status: TaskStatus.Disabled,
       })
       throw new BadRequestException('Task Start failed')
@@ -229,7 +237,7 @@ export class TaskService implements OnModuleInit {
 
     const exist = await this.existJob(task.id.toString())
     if (!exist) {
-      await this.taskRepository.update(task.id, {
+      await this.taskRepository.update({ id: task.id, tenantId: task.tenantId }, {
         status: TaskStatus.Disabled,
       })
       return
@@ -251,7 +259,7 @@ export class TaskService implements OnModuleInit {
     // 在队列中删除当前任务
     await this.taskQueue.removeRepeatable(JSON.parse(task.jobOpts))
 
-    await this.taskRepository.update(task.id, { status: TaskStatus.Disabled })
+    await this.taskRepository.update({ id: task.id, tenantId: task.tenantId }, { status: TaskStatus.Disabled })
     // if (task.jobOpts) {
     //   await this.app.queue.sys.removeRepeatable(JSON.parse(task.jobOpts));
     //   // update status

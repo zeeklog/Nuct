@@ -15,6 +15,8 @@ import { MenuEntity } from '~/modules/system/menu/menu.entity'
 
 import { deleteEmptyChildren, generatorMenu, generatorRouters } from '~/utils'
 
+import { TenantContextService } from '~/modules/tenant/tenant-context.service'
+
 import { RoleService } from '../role/role.service'
 
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
@@ -27,6 +29,7 @@ export class MenuService {
     private menuRepository: Repository<MenuEntity>,
     private roleService: RoleService,
     private sseService: SseService,
+    private tenantContext: TenantContextService,
   ) {}
 
   /**
@@ -39,8 +42,10 @@ export class MenuService {
     component,
     status,
   }: MenuQueryDto): Promise<MenuEntity[]> {
+    const tenantId = this.tenantContext.getTenantId()
     const menus = await this.menuRepository.find({
       where: {
+        tenantId,
         ...(name && { name: Like(`%${name}%`) }),
         ...(path && { path: Like(`%${path}%`) }),
         ...(permission && { permission: Like(`%${permission}%`) }),
@@ -60,7 +65,8 @@ export class MenuService {
   }
 
   async create(menu: MenuDto): Promise<void> {
-    const result = await this.menuRepository.save(menu)
+    const tenantId = this.tenantContext.getTenantId()
+    const result = await this.menuRepository.save({ ...menu, tenantId })
     this.sseService.noticeClientToUpdateMenusByMenuIds([result.id])
   }
 
@@ -75,17 +81,19 @@ export class MenuService {
   async getMenus(uid: number) {
     const roleIds = await this.roleService.getRoleIdsByUser(uid)
     let menus: MenuEntity[] = []
+    const tenantId = this.tenantContext.getTenantId()
 
     if (isEmpty(roleIds))
       return generatorRouters([])
 
     if (this.roleService.hasAdminRole(roleIds)) {
-      menus = await this.menuRepository.find({ order: { orderNo: 'ASC' } })
+      menus = await this.menuRepository.find({ where: { tenantId }, order: { orderNo: 'ASC' } })
     }
     else {
       menus = await this.menuRepository
         .createQueryBuilder('menu')
         .innerJoinAndSelect('menu.roles', 'role')
+        .andWhere('menu.tenantId = :tenantId', { tenantId })
         .andWhere('role.id IN (:...roleIds)', { roleIds })
         .orderBy('menu.order_no', 'ASC')
         .getMany()
@@ -174,8 +182,10 @@ export class MenuService {
     const roleIds = await this.roleService.getRoleIdsByUser(uid)
     let permission: any[] = []
     let result: any = null
+    const tenantId = this.tenantContext.getTenantId()
     if (this.roleService.hasAdminRole(roleIds)) {
       result = await this.menuRepository.findBy({
+        tenantId,
         permission: Not(IsNull()),
         type: In([1, 2]),
       })
@@ -187,6 +197,7 @@ export class MenuService {
       result = await this.menuRepository
         .createQueryBuilder('menu')
         .innerJoinAndSelect('menu.roles', 'role')
+        .andWhere('menu.tenantId = :tenantId', { tenantId })
         .andWhere('role.id IN (:...roleIds)', { roleIds })
         .andWhere('menu.type IN (1,2)')
         .andWhere('menu.permission IS NOT NULL')

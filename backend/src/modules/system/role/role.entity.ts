@@ -8,11 +8,14 @@ import { MenuEntity } from '../menu/menu.entity'
 
 @Entity({ name: 'sys_role' })
 export class RoleEntity extends CompleteEntity {
-  @Column({ length: 50, unique: true })
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
+  @Column({ length: 50 })
   @ApiProperty({ description: '角色名' })
   name: string
 
-  @Column({ unique: true, comment: '角色标识' })
+  @Column({ comment: '角色标识' })
   @ApiProperty({ description: '角色标识' })
   value: string
 

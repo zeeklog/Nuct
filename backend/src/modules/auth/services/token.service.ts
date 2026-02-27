@@ -43,7 +43,7 @@ export class TokenService {
       const roleValues = await this.roleService.getRoleValues(roleIds)
 
       // 如果没过期则生成新的access_token和refresh_token
-      const token = await this.generateAccessToken(user.id, roleValues)
+      const token = await this.generateAccessToken(user.id, roleValues, user.tenantId)
 
       await accessToken.remove()
       return token
@@ -57,10 +57,11 @@ export class TokenService {
     return jwtSign
   }
 
-  async generateAccessToken(uid: number, roles: string[] = []) {
+  async generateAccessToken(uid: number, roles: string[] = [], tenantId?: number) {
     const payload: IAuthUser = {
       uid,
       pv: 1,
+      tenantId: tenantId ?? 1,
       roles,
     }
 
@@ -69,6 +70,7 @@ export class TokenService {
     // 生成accessToken
     const accessToken = new AccessTokenEntity()
     accessToken.value = jwtSign
+    accessToken.tenantId = tenantId ?? 1
     accessToken.user = { id: uid } as UserEntity
     accessToken.expired_at = dayjs()
       .add(this.securityConfig.jwtExprire, 'second')

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Between, Like, Repository } from 'typeorm'
+import { Between, In, Like, Repository } from 'typeorm'
 
 import { paginateRaw } from '~/helper/paginate'
 import { PaginationTypeEnum } from '~/helper/paginate/interface'
 import { Pagination } from '~/helper/paginate/pagination'
+import { TenantContextService } from '~/modules/tenant/tenant-context.service'
 import { Storage } from '~/modules/tools/storage/storage.entity'
 import { UserEntity } from '~/modules/user/user.entity'
 import { deleteFile } from '~/utils'
@@ -19,12 +20,15 @@ export class StorageService {
     private storageRepository: Repository<Storage>,
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private tenantContext: TenantContextService,
   ) {}
 
   async create(dto: StorageCreateDto, userId: number): Promise<void> {
+    const tenantId = this.tenantContext.getTenantId()
     await this.storageRepository.save({
       ...dto,
       userId,
+      tenantId,
     })
   }
 
@@ -32,12 +36,16 @@ export class StorageService {
    * 删除文件
    */
   async delete(fileIds: number[]): Promise<void> {
-    const items = await this.storageRepository.findByIds(fileIds)
-    await this.storageRepository.delete(fileIds)
-
-    items.forEach((el) => {
-      deleteFile(el.path)
+    const tenantId = this.tenantContext.getTenantId()
+    const items = await this.storageRepository.find({
+      where: { id: In(fileIds), tenantId },
     })
+    if (items.length > 0) {
+      await this.storageRepository.delete(items.map(i => i.id))
+      items.forEach((el) => {
+        deleteFile(el.path)
+      })
+    }
   }
 
   async list({
@@ -50,20 +58,31 @@ export class StorageService {
     time,
     username,
   }: StoragePageDto): Promise<Pagination<StorageInfo>> {
+    const tenantId = this.tenantContext.getTenantId()
     const queryBuilder = this.storageRepository
       .createQueryBuilder('storage')
-      .leftJoinAndSelect('sys_user', 'user', 'storage.user_id = user.id')
-      .where({
-        ...(name && { name: Like(`%${name}%`) }),
-        ...(type && { type }),
-        ...(extName && { extName }),
-        ...(size && { size: Between(size[0], size[1]) }),
-        ...(time && { createdAt: Between(time[0], time[1]) }),
-        ...(username && {
-          userId: await (await this.userRepository.findOneBy({ username }))?.id,
-        }),
-      })
-      .orderBy('storage.created_at', 'DESC')
+      .leftJoin('sys_user', 'user', 'storage.user_id = user.id')
+      .where('storage.tenant_id = :tenantId', { tenantId })
+
+    if (name)
+      queryBuilder.andWhere('storage.name LIKE :name', { name: `%${name}%` })
+    if (type)
+      queryBuilder.andWhere('storage.type = :type', { type })
+    if (extName)
+      queryBuilder.andWhere('storage.ext_name = :extName', { extName })
+    if (size)
+      queryBuilder.andWhere('storage.size BETWEEN :size0 AND :size1', { size0: size[0], size1: size[1] })
+    if (time)
+      queryBuilder.andWhere('storage.created_at BETWEEN :time0 AND :time1', { time0: time[0], time1: time[1] })
+    if (username) {
+      const user = await this.userRepository.findOneBy({ username, tenantId })
+      if (user)
+        queryBuilder.andWhere('storage.user_id = :userId', { userId: user.id })
+      else
+        queryBuilder.andWhere('1=0')
+    }
+
+    queryBuilder.orderBy('storage.created_at', 'DESC')
 
     const { items, ...rest } = await paginateRaw<Storage>(queryBuilder, {
       page,
@@ -93,6 +112,7 @@ export class StorageService {
   }
 
   async count(): Promise<number> {
-    return this.storageRepository.count()
+    const tenantId = this.tenantContext.getTenantId()
+    return this.storageRepository.count({ where: { tenantId } })
   }
 }

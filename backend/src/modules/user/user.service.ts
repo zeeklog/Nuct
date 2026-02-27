@@ -8,7 +8,7 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
-import { ROOT_ROLE_ID, SYS_USER_INITPASSWORD } from '~/constants/system.constant'
+import { ROOT_ROLE_ID, ROOT_TENANT_ID, SYS_USER_INITPASSWORD } from '~/constants/system.constant'
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genOnlineUserKey } from '~/helper/genRedisKey'
 
 import { paginate } from '~/helper/paginate'
@@ -20,6 +20,8 @@ import { QQService } from '~/shared/helper/qq.service'
 import { md5, randomValue } from '~/utils'
 
 import { AccessTokenEntity } from '../auth/entities/access-token.entity'
+import { TenantContextService } from '../tenant/tenant-context.service'
+import { TenantEntity } from '../tenant/tenant.entity'
 import { DeptEntity } from '../system/dept/dept.entity'
 import { ParamConfigService } from '../system/param-config/param-config.service'
 import { RoleEntity } from '../system/role/role.entity'
@@ -39,9 +41,12 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
+    @InjectRepository(TenantEntity)
+    private readonly tenantRepository: Repository<TenantEntity>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly paramConfigService: ParamConfigService,
     private readonly qqService: QQService,
+    private readonly tenantContext: TenantContextService,
   ) {}
 
   async findUserById(id: number): Promise<UserEntity | undefined> {
@@ -54,14 +59,20 @@ export class UserService {
       .getOne()
   }
 
+  /**
+   * 根据用户名查找用户（自动关联租户）
+   * 超管优先：若存在同名用户，优先返回租户1（默认租户）的用户
+   * 其余用户：返回其所属租户的用户
+   */
   async findUserByUserName(username: string): Promise<UserEntity | undefined> {
-    return this.userRepository
+    const users = await this.userRepository
       .createQueryBuilder('user')
-      .where({
-        username,
-        status: UserStatus.Enabled,
-      })
-      .getOne()
+      .where('user.username = :username', { username })
+      .andWhere('user.status = :status', { status: UserStatus.Enabled })
+      .orderBy('user.tenantId', 'ASC') // 租户1优先（超管默认租户）
+      .getMany()
+
+    return users[0]
   }
 
   /**
@@ -148,8 +159,10 @@ export class UserService {
     deptId,
     ...data
   }: UserDto): Promise<void> {
+    const tenantId = this.tenantContext.getTenantId()
     const exists = await this.userRepository.findOneBy({
       username,
+      tenantId,
     })
     if (!isEmpty(exists))
       throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
@@ -169,9 +182,10 @@ export class UserService {
       const u = manager.create(UserEntity, {
         username,
         password,
+        tenantId,
         ...data,
         psalt: salt,
-        roles: await this.roleRepository.findBy({ id: In(roleIds) }),
+        roles: await this.roleRepository.findBy({ id: In(roleIds), tenantId }),
         dept: await DeptEntity.findOneBy({ id: deptId }),
       })
 
@@ -187,6 +201,11 @@ export class UserService {
     id: number,
     { password, deptId, roleIds, status, ...data }: UserUpdateDto,
   ): Promise<void> {
+    const tenantId = this.tenantContext.getTenantId()
+    const existing = await this.userRepository.findOneBy({ id, tenantId })
+    if (!existing)
+      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+
     await this.entityManager.transaction(async (manager) => {
       if (password)
         await this.forceUpdatePassword(id, password)
@@ -229,11 +248,13 @@ export class UserService {
    * @param id 用户id
    */
   async info(id: number): Promise<UserEntity> {
+    const tenantId = this.tenantContext.getTenantId()
     const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'roles')
       .leftJoinAndSelect('user.dept', 'dept')
       .where('user.id = :id', { id })
+      .andWhere('user.tenantId = :tenantId', { tenantId })
       .getOne()
 
     delete user.password
@@ -250,7 +271,8 @@ export class UserService {
     if (userIds.includes(rootUserId))
       throw new BadRequestException('不能删除root用户!')
 
-    await this.userRepository.delete(userIds)
+    const tenantId = this.tenantContext.getTenantId()
+    await this.userRepository.delete({ id: In(userIds), tenantId })
   }
 
   /**
@@ -275,12 +297,13 @@ export class UserService {
     email,
     status,
   }: UserQueryDto): Promise<Pagination<UserEntity>> {
+    const tenantId = this.tenantContext.getTenantId()
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.dept', 'dept')
       .leftJoinAndSelect('user.roles', 'role')
-      // .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
-      .where({
+      .where('user.tenantId = :tenantId', { tenantId })
+      .andWhere({
         ...(username ? { username: Like(`%${username}%`) } : null),
         ...(nickname ? { nickname: Like(`%${nickname}%`) } : null),
         ...(email ? { email: Like(`%${email}%`) } : null),

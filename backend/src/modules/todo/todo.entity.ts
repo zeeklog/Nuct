@@ -6,6 +6,9 @@ import { UserEntity } from '~/modules/user/user.entity'
 
 @Entity('todo')
 export class TodoEntity extends CommonEntity {
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
   @Column()
   @ApiProperty({ description: 'todo' })
   value: string

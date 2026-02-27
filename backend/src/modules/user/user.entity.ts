@@ -19,7 +19,10 @@ import { RoleEntity } from '~/modules/system/role/role.entity'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends CommonEntity {
-  @Column({ unique: true })
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
+  @Column()
   username: string
 
   @Exclude()

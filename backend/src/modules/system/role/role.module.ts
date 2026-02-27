@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { SseService } from '~/modules/sse/sse.service'
+import { TenantModule } from '~/modules/tenant/tenant.module'
 
 import { MenuModule } from '../menu/menu.module'
 
@@ -14,6 +15,7 @@ const providers = [RoleService, SseService]
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoleEntity]),
+    TenantModule,
     forwardRef(() => MenuModule),
   ],
   controllers: [RoleController],

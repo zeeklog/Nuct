@@ -5,6 +5,7 @@ import { message as $message, Modal } from 'ant-design-vue';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ResultEnum } from '@/enums/httpEnum';
 import { useUserStore } from '@/store/modules/user';
+import { useTenantStore } from '@/store/modules/tenant';
 import { useSSEStore } from '@/store/modules/sse';
 
 export interface RequestOptions extends AxiosRequestConfig {
@@ -42,10 +43,15 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     const userStore = useUserStore();
+    const tenantStore = useTenantStore();
     const token = userStore.token;
     if (token && config.headers) {
-      // 请求头token信息，请根据实际情况进行修改
       config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    // 超管切换租户：传递 X-Tenant-Id
+    const userInfo = userStore.userInfo as { id?: number } | undefined;
+    if (userInfo?.id === 1 && tenantStore.currentTenantId && config.headers) {
+      config.headers['X-Tenant-Id'] = String(tenantStore.currentTenantId);
     }
     return config;
   },

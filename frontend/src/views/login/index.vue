@@ -2,8 +2,7 @@
   <div class="login-box">
     <div class="login-logo">
       <!-- <svg-icon name="logo" :size="45" /> -->
-      <img src="~@/assets/images/logo.png" width="45" />
-      <h1 class="mb-0 ml-2 text-3xl font-bold">Antdv Admin</h1>
+      <img src="~@/assets/images/logo.png" width="250" />
     </div>
     <a-form layout="horizontal" :model="loginFormModel" @submit.prevent="handleSubmit">
       <a-form-item>
@@ -87,9 +86,6 @@
     }
     message.loading('登录中...', 0);
     loading.value = true;
-    console.log(loginFormModel.value);
-    // params.password = md5(password)
-
     const [err] = await to(userStore.login(loginFormModel.value));
     if (err) {
       Modal.error({

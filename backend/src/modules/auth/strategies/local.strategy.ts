@@ -12,13 +12,13 @@ export class LocalStrategy extends PassportStrategy(
 ) {
   constructor(private authService: AuthService) {
     super({
-      usernameField: 'credential',
+      usernameField: 'username',
       passwordField: 'password',
+      passReqToCallback: true,
     })
   }
 
-  async validate(username: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(username, password)
-    return user
+  async validate(_req: any, username: string, password: string): Promise<any> {
+    return this.authService.validateUser(username, password)
   }
 }

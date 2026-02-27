@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { TenantModule } from '../../tenant/tenant.module'
 import { UserModule } from '../../user/user.module'
+
+import { TaskEntity } from '../task/task.entity'
 
 import { CaptchaLogEntity } from './entities/captcha-log.entity'
 import { LoginLogEntity } from './entities/login-log.entity'
@@ -15,7 +18,8 @@ const providers = [LoginLogService, TaskLogService, CaptchaLogService]
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([LoginLogEntity, CaptchaLogEntity, TaskLogEntity]),
+    TypeOrmModule.forFeature([LoginLogEntity, CaptchaLogEntity, TaskLogEntity, TaskEntity]),
+    TenantModule,
     UserModule,
   ],
   controllers: [LogController],

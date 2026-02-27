@@ -23,6 +23,7 @@ export enum ErrorEnum {
   DEPARTMENT_NOT_FOUND = '1019:部门不存在',
   PARAMETER_CONFIG_KEY_EXISTS = '1022:参数配置键值对已存在',
   DEFAULT_ROLE_NOT_FOUND = '1023:所分配的默认角色不存在',
+  TENANT_CODE_EXISTS = '1024:租户编码已存在',
 
   INVALID_LOGIN = '1101:登录无效，请重新登录',
   NO_PERMISSION = '1102:无权限访问',

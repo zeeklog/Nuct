@@ -5,7 +5,10 @@ import { CommonEntity } from '~/common/entity/common.entity'
 
 @Entity({ name: 'sys_task' })
 export class TaskEntity extends CommonEntity {
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
+  @Column({ type: 'varchar', length: 50 })
   @ApiProperty({ description: '任务名' })
   name: string
 

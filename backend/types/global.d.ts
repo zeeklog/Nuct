@@ -2,6 +2,8 @@ declare global {
   interface IAuthUser {
     uid: number
     pv: number
+    /** 租户 ID */
+    tenantId?: number
     /** 过期时间 */
     exp?: number
     /** 签发时间 */

@@ -4,3 +4,5 @@ export const SYS_API_TOKEN = 'sys_api_token'
 export const ROOT_USER_ID = 1
 /** 超级管理员角色 id */
 export const ROOT_ROLE_ID = 1
+/** 默认租户 id */
+export const ROOT_TENANT_ID = 1

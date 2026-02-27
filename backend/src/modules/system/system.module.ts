@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 
 import { RouterModule } from '@nestjs/core'
 
+import { TenantModule } from '../tenant/tenant.module'
 import { UserModule } from '../user/user.module'
 
 import { DeptModule } from './dept/dept.module'
@@ -16,6 +17,7 @@ import { ServeModule } from './serve/serve.module'
 import { TaskModule } from './task/task.module'
 
 const modules = [
+  TenantModule,
   UserModule,
   RoleModule,
   MenuModule,

@@ -7,6 +7,7 @@ import { PagerDto } from '~/common/dto/pager.dto'
 import { ROOT_ROLE_ID } from '~/constants/system.constant'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
+import { TenantContextService } from '~/modules/tenant/tenant-context.service'
 import { MenuEntity } from '~/modules/system/menu/menu.entity'
 import { RoleEntity } from '~/modules/system/role/role.entity'
 
@@ -20,6 +21,7 @@ export class RoleService {
     @InjectRepository(MenuEntity)
     private menuRepository: Repository<MenuEntity>,
     @InjectEntityManager() private entityManager: EntityManager,
+    private tenantContext: TenantContextService,
   ) {}
 
   /**
@@ -43,18 +45,23 @@ export class RoleService {
     remark,
     status,
   }: RoleQueryDto): Promise<Pagination<RoleEntity>> {
-    const queryBuilder = await this.roleRepository
+    const tenantId = this.tenantContext.getTenantId()
+    const queryBuilder = this.roleRepository
       .createQueryBuilder('role')
-      .where({
-        ...(name ? { name: Like(`%${name}%`) } : null),
-        ...(value ? { value: Like(`%${value}%`) } : null),
-        ...(remark ? { remark: Like(`%${remark}%`) } : null),
-        ...(!isNil(status) ? { status } : null),
-      })
+      .where('role.tenantId = :tenantId', { tenantId })
+
+    if (name)
+      queryBuilder.andWhere('role.name LIKE :name', { name: `%${name}%` })
+    if (value)
+      queryBuilder.andWhere('role.value LIKE :value', { value: `%${value}%` })
+    if (remark)
+      queryBuilder.andWhere('role.remark LIKE :remark', { remark: `%${remark}%` })
+    if (!isNil(status))
+      queryBuilder.andWhere('role.status = :status', { status })
 
     return paginate<RoleEntity>(queryBuilder, {
-      page,
-      pageSize,
+      page: page ?? 1,
+      pageSize: pageSize ?? 10,
     })
   }
 
@@ -87,10 +94,12 @@ export class RoleService {
    * 增加角色
    */
   async create({ menuIds, ...data }: RoleDto): Promise<{ roleId: number }> {
+    const tenantId = this.tenantContext.getTenantId()
     const role = await this.roleRepository.save({
       ...data,
+      tenantId,
       menus: menuIds
-        ? await this.menuRepository.findBy({ id: In(menuIds) })
+        ? await this.menuRepository.findBy({ id: In(menuIds), tenantId })
         : [],
     })
 

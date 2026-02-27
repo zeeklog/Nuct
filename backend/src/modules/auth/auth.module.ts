@@ -11,6 +11,7 @@ import { isDev } from '~/global/env'
 import { LogModule } from '../system/log/log.module'
 import { MenuModule } from '../system/menu/menu.module'
 import { RoleModule } from '../system/role/role.module'
+import { TenantModule } from '../tenant/tenant.module'
 import { UserModule } from '../user/user.module'
 
 import { AuthController } from './auth.controller'
@@ -57,6 +58,7 @@ const strategies = [LocalStrategy, JwtStrategy]
     UserModule,
     RoleModule,
     MenuModule,
+    TenantModule,
     LogModule,
   ],
   controllers: [...controllers],

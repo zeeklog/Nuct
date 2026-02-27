@@ -15,6 +15,9 @@ export class RefreshTokenEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string
 
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId!: number
+
   @Column({ length: 500 })
   value!: string
 

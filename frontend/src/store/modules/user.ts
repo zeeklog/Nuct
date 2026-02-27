@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useLockscreenStore } from './lockscreen';
 import { useSSEStore } from './sse';
+import { useTenantStore } from './tenant';
 import type { RouteRecordRaw } from 'vue-router';
 import { store } from '@/store';
 import Api from '@/api/';
@@ -36,6 +37,7 @@ export const useUserStore = defineStore(
       perms.value = [];
       menus.value = [];
       userInfo.value = {};
+      useTenantStore().clearTenant();
       resetRouter();
       setTimeout(() => {
         localStorage.clear();

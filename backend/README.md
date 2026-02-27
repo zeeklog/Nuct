@@ -1,10 +1,10 @@
-# Nuct
+# nest-admin
 
-![](https://img.shields.io/github/commit-activity/m/zeeklog/nuct) ![](https://img.shields.io/github/license/zeeklog/nuct) ![](https://img.shields.io/github/repo-size/zeeklog/nuct) ![](https://img.shields.io/github/languages/top/zeeklog/nuct)
+![](https://img.shields.io/github/commit-activity/m/buqiyuan/nest-admin) ![](https://img.shields.io/github/license/buqiyuan/nest-admin) ![](https://img.shields.io/github/repo-size/buqiyuan/nest-admin) ![](https://img.shields.io/github/languages/top/buqiyuan/nest-admin)
 
 **基于 NestJs + TypeScript + TypeORM + Redis + MySql + Vue3 + Ant Design Vue 编写的一款简单高效的前后端分离的权限管理系统。希望这个项目在全栈的路上能够帮助到你。**
 
-- 前端项目地址：[传送门](https://github.com/zeeklog/ntcu/frontend)
+- 前端项目地址：[传送门](https://github.com/buqiyuan/vue3-antdv-admin)
 
 ## 演示地址
 
@@ -35,19 +35,19 @@
     </details>
   </li>
   <li>
-   <a href="https://github.com/zeeklog/nuct" target="_blank">
-      Nuct 项目仓库
-   </a>（部署后访问 /api-docs/ 查看 Swagger 文档）
+   <a href="https://nest-admin.buqiyuan.top/api-docs/" target="_blank">
+      Swagger 文档
+   </a>
   </li>
 </ul>
 
 ## 项目启动前的准备工作
 
-- sql 文件：[/deploy/sql/nest_admin.sql](https://github.com/zeeklog/nuct/tree/main/deploy/sql/nest_admin.sql) 用于数据库初始化
+- sql 文件：[/deploy/sql/nest_admin.sql](https://github.com/buqiyuan/nest-admin/tree/main/deploy/sql/nest_admin.sql) 用于数据库初始化
 - 项目相关配置，如：配置 mysql 和 redis 连接
-  - 公共配置: [.env](https://github.com/zeeklog/nuct/blob/main/.env)
-  - 开发环境: [.env.development](https://github.com/zeeklog/nuct/blob/main/.env.development)
-  - 生产环境: [.env.production](https://github.com/zeeklog/nuct/blob/main/.env.production)
+  - 公共配置: [.env](https://github.com/buqiyuan/nest-admin/blob/main/.env)
+  - 开发环境: [.env.development](https://github.com/buqiyuan/nest-admin/blob/main/.env.development)
+  - 生产环境: [.env.production](https://github.com/buqiyuan/nest-admin/blob/main/.env.production)
 
 ## 环境要求
 
@@ -93,7 +93,7 @@ docker compose --env-file .env --env-file .env.production down
 ```bash
 pnpm docker:rmi
 # or
-docker rmi zeeklog/nuct-server:stable
+docker rmi buqiyuan/nest-admin-server:stable
 ```
 
 查看实时日志输出
@@ -110,7 +110,7 @@ docker compose --env-file .env --env-file .env.production logs -f
 - 获取项目代码
 
 ```bash
-git clone https://github.com/zeeklog/nuct
+git clone https://github.com/buqiyuan/nest-admin
 ```
 
 - 【可选】如果你是新手，还不太会搭建`mysql/redis`，你可以使用 `Docker` 启动指定服务供本地开发时使用, 例如：
@@ -125,7 +125,7 @@ docker compose --env-file .env --env-file .env.development run -d --service-port
 - 安装依赖
 
 ```bash
-cd nuct
+cd nest-admin
 
 pnpm install
 

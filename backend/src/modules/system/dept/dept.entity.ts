@@ -16,6 +16,9 @@ import { UserEntity } from '../../user/user.entity'
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')
 export class DeptEntity extends CompleteEntity {
+  @Column({ name: 'tenant_id', default: 1 })
+  tenantId: number
+
   @Column()
   @ApiProperty({ description: '部门名称' })
   name: string

@@ -11,7 +11,7 @@ import { transformI18n } from '@/hooks/useI18n';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-const defaultRoutePath = '/dashboard/welcome';
+const defaultRoutePath = '/dashboard/index';
 
 export function createRouterGuards(router: Router, whiteNameList: WhiteNameList) {
   router.beforeEach(async (to, from, next) => {

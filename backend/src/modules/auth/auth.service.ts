@@ -74,7 +74,7 @@ export class AuthService {
     const roles = await this.roleService.getRoleValues(roleIds)
 
     // 包含access_token和refresh_token
-    const token = await this.tokenService.generateAccessToken(user.id, roles)
+    const token = await this.tokenService.generateAccessToken(user.id, roles, user.tenantId)
 
     await this.redis.set(genAuthTokenKey(user.id), token.accessToken, 'EX', this.securityConfig.jwtExprire)
 
@@ -85,7 +85,7 @@ export class AuthService {
     const permissions = await this.menuService.getPermissions(user.id)
     await this.setPermissionsCache(user.id, permissions)
 
-    await this.loginLogService.create(user.id, ip, ua)
+    await this.loginLogService.create(user.id, ip, ua, user.tenantId)
 
     return token.accessToken
   }
@@ -95,6 +95,8 @@ export class AuthService {
    */
   async checkPassword(username: string, password: string) {
     const user = await this.userService.findUserByUserName(username)
+    if (isEmpty(user))
+      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
     const comparePassword = md5(`${password}${user.psalt}`)
     if (user.password !== comparePassword)
@@ -110,6 +112,8 @@ export class AuthService {
    */
   async resetPassword(username: string, password: string) {
     const user = await this.userService.findUserByUserName(username)
+    if (isEmpty(user))
+      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
     await this.userService.forceUpdatePassword(user.id, password)
   }
