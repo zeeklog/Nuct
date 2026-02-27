@@ -147,7 +147,7 @@ export class TenantInitService {
 
     const user = this.userRepo.create({
       tenantId,
-      username: 'admin',
+      username: Math.random().toString(36).substring(2, 15),
       password,
       psalt,
       nickname: '租户管理员',
