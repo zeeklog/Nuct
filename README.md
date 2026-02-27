@@ -2,7 +2,9 @@
 <p align="center">
   <img src="assets/logo-small.png" alt="Nuct Logo" width="120" />
 
-## 你只需要关注业务，将基础设施交给Nuct！
+<p align="center">
+  <strong>你只需要关注业务，将基础设施交给Nuct！</strong>
+</p>
 
 <p align="center">
   <strong>基于 NestJs +Vue3的企业级前后端分离快速开发脚手架， 将你的基础工作交给Cursor Rules & Skills</strong>
