@@ -14,7 +14,10 @@
 
 <style lang="less" scoped>
   .logo {
-    @apply flex overflow-hidden whitespace-nowrap items-center;
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    align-items: center;
 
     width: 100%;
     height: 64px;
@@ -28,8 +31,8 @@
     }
 
     .title {
-      @apply mb-0 text-xl;
-
+      margin-bottom: 0;
+      font-size: 1.25rem;
       color: var(--app-primary-color);
     }
   }

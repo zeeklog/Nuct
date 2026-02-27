@@ -35,7 +35,7 @@ export type LayoutSetting = {
 };
 
 export const defaultSetting: LayoutSetting = {
-  navTheme: 'dark', // theme for nav menu
+  navTheme: 'light', // theme for nav menu
   colorPrimary: '#1677FF', // '#F5222D', // primary color of ant design
   layout: 'sidemenu', // nav menu position: `sidemenu` or `topmenu`
   contentWidth: 'Fluid', // layout of content: `Fluid` or `Fixed`, only works when layout is topmenu

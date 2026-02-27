@@ -36,3 +36,6 @@ alwaysApply: false
 - 表单：`BasicForm` + `formSchemas`
 - 表格：`BasicTable` + 列配置
 - 弹窗：`BasicModal`
+
+## logo
+- 使用`frontend/assets/image/logo-small.png`作为默认的项目logo
