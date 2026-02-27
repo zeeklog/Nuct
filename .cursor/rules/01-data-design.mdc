@@ -1,0 +1,50 @@
+---
+description: 数据库设计与 RBAC 权限模型
+globs: backend/**/*.ts, backend/deploy/sql/**/*
+alwaysApply: false
+---
+
+# 数据设计
+
+## 核心表结构
+
+| 表名 | 说明 |
+|------|------|
+| sys_user | 用户 |
+| sys_role | 角色 |
+| sys_menu | 菜单/权限(树形) |
+| sys_dept | 部门(树形, mpath) |
+| sys_user_roles | 用户-角色 多对多 |
+| sys_role_menus | 角色-菜单 多对多 |
+| sys_dict_type / sys_dict_item | 字典类型/字典项 |
+| sys_config | 系统参数配置 |
+| sys_task / sys_task_log | 定时任务及日志 |
+| sys_login_log | 登录日志 |
+| user_access_tokens / user_refresh_tokens | JWT 令牌 |
+| tool_storage | 文件存储 |
+
+## RBAC 权限模型
+
+- **User → Role → Menu(Permission)**：用户通过角色关联菜单权限
+- **sys_menu.type**：0=目录、1=菜单、2=按钮
+- **permission 格式**：`module:resource:action`，如 `system:user:list`、`system:user:create`
+
+### 权限动作约定
+
+- `list`：列表页访问
+- `read` / `info`：详情/查询
+- `create`：新增
+- `update`：修改
+- `delete`：删除
+
+### 后端权限装饰器
+
+```typescript
+@RequirePermissions('system:user:list')  // 需此权限
+@Public()                                // 无需登录
+@AllowAnon()                             // 需登录但无需权限
+```
+
+## 多租户扩展
+
+若启用多租户，实体需加 `tenant_id` 字段，查询时自动按租户过滤。租户初始化见 `tenant-init.mdc`。

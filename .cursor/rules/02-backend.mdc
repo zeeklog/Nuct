@@ -1,0 +1,81 @@
+---
+description: NestJS 后端开发规范
+globs: backend/**/*.ts
+alwaysApply: false
+---
+
+# 后端开发规范
+
+## 模块架构（参考 backend/documentation）
+
+| 模块 | 说明 | 路由前缀 |
+|------|------|----------|
+| AuthModule | 认证、登录、JWT | /auth, /account |
+| SystemModule | 系统管理（用户/角色/菜单等） | /system |
+| ToolsModule | 工具（上传/存储/邮件） | - |
+| NetdiskModule | 网盘 | - |
+| SseModule | SSE 推送 | /sse |
+| HealthModule | 健康检查 | /health |
+| TasksModule | Bull 定时任务 | - |
+| TodoModule | 待办示例 | /todos |
+
+SystemModule 子模块：User、Role、Menu、Dept、DictType、DictItem、ParamConfig、Log、Task、Online、Serve。
+
+## 模块与路由
+
+- 业务模块放在 `src/modules/`，系统模块在 `SystemModule` 下统一挂载 `/system` 前缀
+- 新增模块：创建 `xxx.module.ts`、`xxx.controller.ts`、`xxx.service.ts`、`xxx.entity.ts`
+- 在 `app.module.ts` 或对应父模块中 `imports` 注册
+
+## 控制器规范
+
+```typescript
+import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { IdParam } from '~/common/decorators/id-param.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+
+export const permissions = definePermission('system:user', {
+  LIST: 'list', CREATE: 'create', READ: 'read', UPDATE: 'update', DELETE: 'delete',
+} as const)
+
+@ApiTags('System - 用户模块')
+@ApiSecurityAuth()
+@Controller('users')
+export class UserController {
+  @Get()
+  @ApiOperation({ summary: '获取列表' })
+  @ApiResult({ type: [UserEntity], isPage: true })
+  @Perm(permissions.LIST)
+  async list(@Query() dto: UserQueryDto) { ... }
+}
+```
+
+## 装饰器约定
+
+- `@Perm(permission)`：需对应权限，支持 `definePermission('module:resource', { ACTION: 'action' })` 或数组形式
+- `@Public()`：无需登录（如登录接口）
+- `@AllowAnon()`：需登录但无需权限（如获取当前用户信息）
+- `@ApiResult({ type, isPage })`：Swagger 响应 + 统一响应格式
+- `@IdParam()`：路径参数 id 校验
+
+## 全局守卫与拦截器
+
+- **JwtAuthGuard**：JWT 校验
+- **RbacGuard**：权限校验（配合 @Perm）
+- **ThrottlerGuard**：限流
+- **TransformInterceptor**：统一响应格式
+- **TimeoutInterceptor**：15s 超时
+- **IdempotenceInterceptor**：幂等
+- **ClassSerializerInterceptor**：序列化
+
+## 异常与响应
+
+- 业务异常：`throw new BusinessException(ErrorEnum.XXX)`
+- 统一响应：`ResOp`，`{ code, message, data }`，成功 code=0
+- 分页：`{ items, meta: { itemCount, totalItems, itemsPerPage, totalPages, currentPage } }`
+
+## 数据库
+
+- 使用 TypeORM 实体，迁移脚本在 `deploy/sql/`
+- 实体变更后：`pnpm build` → `pnpm migration:generate` → `pnpm migration:run`

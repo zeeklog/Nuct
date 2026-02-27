@@ -1,0 +1,34 @@
+---
+description: 后端文档与 API 参考
+globs: backend/**/*.ts
+alwaysApply: false
+---
+
+# 后端文档参考
+
+## 文档位置
+
+- **Swagger**：启动后端后访问 <http://localhost:7001/api-docs/>
+- **Compodoc**：`backend/documentation/index.html`（本地打开或通过静态服务）
+
+## Compodoc 内容
+
+- **Modules**：30+ 模块依赖关系
+- **Controllers**：23 个控制器
+- **Entities**：15 个实体
+- **Injectables**：44 个服务
+- **Overview**：模块依赖图
+
+## 关键模块
+
+| 模块 | 说明 |
+|------|------|
+| AuthModule | JwtStrategy、LocalStrategy、TokenService |
+| SystemModule | User、Role、Menu、Dept、Dict、Task、Log、Online、Serve |
+| SharedModule | Redis、Mailer、Helper、Logger、Database |
+| ToolsModule | Upload、Storage、Email |
+| NetdiskModule | 网盘管理、概览 |
+
+## 开发时
+
+优先查阅 Swagger 获取接口定义，查阅 Compodoc 了解模块依赖与类结构。

@@ -1,0 +1,353 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>nuct documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="./" class="navbar-brand">nuct documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content readme">
+                   <div class="content-data">
+
+
+<h1>Nuct</h1>
+<p><img src="https://img.shields.io/github/commit-activity/m/zeeklog/nuct" alt="" class="img-responsive"> <img src="https://img.shields.io/github/license/zeeklog/nuct" alt="" class="img-responsive"> <img src="https://img.shields.io/github/repo-size/zeeklog/nuct" alt="" class="img-responsive"> <img src="https://img.shields.io/github/languages/top/zeeklog/nuct" alt="" class="img-responsive"></p>
+<p><strong>基于 NestJs + TypeScript + TypeORM + Redis + MySql + Vue3 + Ant Design Vue 编写的一款简单高效的前后端分离的权限管理系统。希望这个项目在全栈的路上能够帮助到你。</strong></p>
+<ul>
+<li>前端项目地址：<a href="https://github.com/zeeklog/ntcu/frontend">传送门</a></li>
+</ul>
+<h2>演示地址</h2>
+<ul>
+  <li>
+    <details>
+      <summary>
+        <a href="https://vue3-antdv-admin.pages.dev/" target="_blank">
+        https://vue3-antdv-admin.pages.dev/
+        </a>（墙内）
+      </summary>
+      只读，可以完整地预览项目的初始效果
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <a href="https://vue3-antd-admin.vercel.app/" target="_blank">
+        https://vue3-antd-admin.vercel.app/
+        </a>（墙外）
+      </summary>
+      <ul>
+        <li>
+        可随意 CRUD，所以你看到的数据可能已经被其他人修改过，而非项目得初始效果，并且数据库的数据会在每天凌晨 4.30 分重置一次。
+        </li>
+        <li>由于是白嫖的国外服务器资源，所以不保熟， 并可能还需要翻墙浏览。</li>
+      </ul>
+    </details>
+  </li>
+  <li>
+   <a href="https://github.com/zeeklog/nuct" target="_blank">
+      Nuct 项目仓库
+   </a>（部署后访问 /api-docs/ 查看 Swagger 文档）
+  </li>
+</ul>
+
+<h2>项目启动前的准备工作</h2>
+<ul>
+<li>sql 文件：<a href="https://github.com/zeeklog/nuct/tree/main/deploy/sql/nest_admin.sql">/deploy/sql/nest_admin.sql</a> 用于数据库初始化</li>
+<li>项目相关配置，如：配置 mysql 和 redis 连接<ul>
+<li>公共配置: <a href="https://github.com/zeeklog/nuct/blob/main/.env">.env</a></li>
+<li>开发环境: <a href="https://github.com/zeeklog/nuct/blob/main/.env.development">.env.development</a></li>
+<li>生产环境: <a href="https://github.com/zeeklog/nuct/blob/main/.env.production">.env.production</a></li>
+</ul>
+</li>
+</ul>
+<h2>环境要求</h2>
+<ul>
+<li><code>nodejs</code> <code>20</code>+</li>
+<li><code>docker</code> <code>20.x</code>+ ，其中 <code>docker compose</code>版本需要 <code>2.17.0</code>+</li>
+<li><code>mysql</code> <code>8.x</code>+</li>
+<li>使用 <a href="https://pnpm.io/zh/"><code>pnpm</code></a> 包管理器安装项目依赖</li>
+</ul>
+<p>演示环境账号密码：</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th align="center">账号</th>
+<th align="center">密码</th>
+<th align="center">权限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">admin</td>
+<td align="center">a123456</td>
+<td align="center">超级管理员</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>所有新建的用户初始密码都为 a123456</p>
+</blockquote>
+<p>本地部署账号密码：</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th align="center">账号</th>
+<th align="center">密码</th>
+<th align="center">权限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">admin</td>
+<td align="center">a123456</td>
+<td align="center">超级管理员</td>
+</tr>
+</tbody>
+</table>
+<h2>快速体验</h2>
+<p>启动成功后，通过 <a href="http://localhost:7001/api-docs/">http://localhost:7001/api-docs/</a> 访问。</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm docker:up
+# or
+docker compose --env-file .env --env-file .env.production up -d --no-build</code></pre></div><p>停止并删除所有容器</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm docker:down
+# or
+docker compose --env-file .env --env-file .env.production down</code></pre></div><p>删除镜像</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm docker:rmi
+# or
+docker rmi zeeklog/nuct-server:stable</code></pre></div><p>查看实时日志输出</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm docker:logs
+# or
+docker compose --env-file .env --env-file .env.production logs -f
+</code></pre></div><h2>本地开发</h2>
+<ul>
+<li>获取项目代码</li>
+</ul>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">git clone https://github.com/zeeklog/nuct</code></pre></div><ul>
+<li>【可选】如果你是新手，还不太会搭建<code>mysql/redis</code>，你可以使用 <code>Docker</code> 启动指定服务供本地开发时使用, 例如：</li>
+</ul>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash"># 启动MySql服务
+docker compose --env-file .env --env-file .env.development run -d --service-ports mysql
+# 启动Redis服务
+docker compose --env-file .env --env-file .env.development run -d --service-ports redis</code></pre></div><ul>
+<li>安装依赖</li>
+</ul>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">cd nuct
+
+pnpm install
+</code></pre></div><ul>
+<li>运行
+启动成功后，通过 <a href="http://localhost:7001/api-docs/">http://localhost:7001/api-docs/</a> 访问。</li>
+</ul>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm dev</code></pre></div><ul>
+<li>打包</li>
+</ul>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm build</code></pre></div><h2>数据库迁移</h2>
+<ol>
+<li>更新数据库(或初始化数据)</li>
+</ol>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm migration:run</code></pre></div><ol start="2">
+<li>生成迁移</li>
+</ol>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm migration:generate</code></pre></div><ol start="3">
+<li>回滚到最后一次更新</li>
+</ol>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">pnpm migration:revert</code></pre></div><p>更多细节，请移步至<a href="https://typeorm.io/migrations">官方文档</a></p>
+<blockquote>
+<p>[!TIP]
+如果你的<code>实体类</code>或<code>数据库配置</code>有更新，请执行<code>npm run build</code>后再进行数据库迁移相关操作。</p>
+</blockquote>
+<h2>系统截图</h2>
+<p><img src="https://s1.ax1x.com/2021/12/11/oTi1nf.png" alt="" class="img-responsive"></p>
+<p><img src="https://s1.ax1x.com/2021/12/11/oTithj.png" alt="" class="img-responsive"></p>
+<p><img src="https://s1.ax1x.com/2021/12/11/oTirHU.png" alt="" class="img-responsive"></p>
+<p><img src="https://s1.ax1x.com/2021/12/11/oTia3n.png" alt="" class="img-responsive"></p>
+<h3>欢迎 Star &amp;&amp; PR</h3>
+<p><strong>如果项目有帮助到你可以点个 Star 支持下。有更好的实现欢迎 PR。</strong></p>
+<h3>致谢</h3>
+<ul>
+<li><a href="https://github.com/hackycy/sf-nest-admin">sf-nest-admin</a></li>
+</ul>
+<h3>LICENSE</h3>
+<p><a href="LICENSE">MIT</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'readme';
+            var COMPODOC_CURRENT_PAGE_URL = 'index.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+
+       <script src="./js/menu-wc.js" defer></script>
+       <script nomodule src="./js/menu-wc_es5.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

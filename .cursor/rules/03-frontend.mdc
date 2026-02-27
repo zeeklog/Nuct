@@ -1,0 +1,38 @@
+---
+description: Vue3 前端开发规范
+globs: frontend/**/*.{ts,vue}
+alwaysApply: false
+---
+
+# 前端开发规范
+
+## 目录结构
+
+- `src/views/`：页面组件，按业务分目录（system、tool、netdisk 等）
+- `src/api/`：API 封装，与后端模块对应
+- `src/router/routes/modules/`：路由模块
+- `src/store/modules/`：Pinia 状态
+- `formSchemas.ts`：表单 schema（与 `BasicForm` 等配合）
+
+## 路由与菜单
+
+- 菜单由后端 `sys_menu` 动态返回，前端根据 `component` 动态加载
+- 组件路径：`system/user/index` → `views/system/user/index.vue`
+
+## API 请求
+
+- 使用 `src/utils/request.ts` 封装的 axios
+- 请求头：`Authorization: Bearer ${token}`
+- 响应：`res.code === 0` 为成功，1101/1105 触发重新登录
+
+## 权限控制
+
+- 按钮级：`usePermission().hasPermission('system:user:create')`
+- 菜单由后端根据角色返回，前端无需硬编码
+
+## 组件约定
+
+- 使用 Ant Design Vue 组件
+- 表单：`BasicForm` + `formSchemas`
+- 表格：`BasicTable` + 列配置
+- 弹窗：`BasicModal`
