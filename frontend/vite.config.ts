@@ -119,6 +119,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       host: '0.0.0.0',
       port: 8088,
       open: true,
+      watch: {
+        // 忽略 Nx 缓存目录，避免 workspace-data 等文件变更触发页面重复刷新
+        ignored: ['**/.nx/**', '**/node_modules/**'],
+      },
       proxy: {
         '^/api': {
           // target: 'https://nuct.zeeklog.dev',
@@ -126,7 +130,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           secure: false,
           agent: new https.Agent(),
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, ''),
+          // 后端 NestJS 使用 globalPrefix: 'api'，需保留 /api 前缀，不能 rewrite 掉
         },
         '^/upload': {
           // target: 'https://nuct.zeeklog.dev/upload',
