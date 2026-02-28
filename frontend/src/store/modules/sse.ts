@@ -52,7 +52,7 @@ export const useSSEStore = defineStore('sse', () => {
     const uid = userStore.userInfo.id;
     if (!uid) return;
     const sseUrl = uniqueSlash(
-      `${import.meta.env.VITE_BASE_API_URL}/api/sse/${uid}?token=${userStore.token}`,
+      `/api/sse/${uid}?token=${userStore.token}`,
     );
 
     eventSource = new EventSource(sseUrl);
