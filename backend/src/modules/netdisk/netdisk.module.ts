@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 
 import { RouterModule } from '@nestjs/core'
 
+import { TenantModule } from '../tenant/tenant.module'
 import { UserModule } from '../user/user.module'
 
 import { NetDiskManageController } from './manager/manage.controller'
@@ -10,7 +11,7 @@ import { NetDiskOverviewController } from './overview/overview.controller'
 import { NetDiskOverviewService } from './overview/overview.service'
 
 @Module({
-  imports: [UserModule, RouterModule.register([
+  imports: [UserModule, TenantModule, RouterModule.register([
     {
       path: 'netdisk',
       module: NetdiskModule,

@@ -10,6 +10,7 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
 import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
+import { TenantContextService } from '~/modules/tenant/tenant-context.service'
 
 import { checkIsDemoMode } from '~/utils'
 
@@ -43,27 +44,40 @@ export const permissions = definePermission('netdisk:manage', {
 @ApiTags('NetDiskManage - 网盘管理模块')
 @Controller('manage')
 export class NetDiskManageController {
-  constructor(private manageService: NetDiskManageService) {}
+  constructor(
+    private manageService: NetDiskManageService,
+    private tenantContext: TenantContextService,
+  ) {}
+
+  /** 按租户+用户隔离路径，防止越权访问 */
+  private prefixPath(userPath: string, uid: number): string {
+    const tenantId = this.tenantContext.getTenantId()
+    const base = `${tenantId}/${uid}/`
+    const normalized = (userPath || '').replace(/^\//, '')
+    return normalized ? `${base}${normalized}${normalized.endsWith('/') ? '' : '/'}` : base
+  }
 
   @Get('list')
   @ApiOperation({ summary: '获取文件列表' })
   @ApiOkResponse({ type: SFileList })
   @Perm(permissions.LIST)
-  async list(@Query() dto: GetFileListDto): Promise<SFileList> {
-    return await this.manageService.getFileList(dto.path, dto.marker, dto.key)
+  async list(@Query() dto: GetFileListDto, @AuthUser() user: IAuthUser): Promise<SFileList> {
+    const path = this.prefixPath(dto.path, user.uid)
+    return await this.manageService.getFileList(path, dto.marker, dto.key)
   }
 
   @Post('mkdir')
   @ApiOperation({ summary: '创建文件夹，支持多级' })
   @Perm(permissions.MKDIR)
-  async mkdir(@Body() dto: MKDirDto): Promise<void> {
+  async mkdir(@Body() dto: MKDirDto, @AuthUser() user: IAuthUser): Promise<void> {
+    const path = this.prefixPath(dto.path, user.uid)
     const result = await this.manageService.checkFileExist(
-      `${dto.path}${dto.dirName}/`,
+      `${path}${dto.dirName}/`,
     )
     if (result)
       throw new BusinessException(ErrorEnum.OSS_FILE_OR_DIR_EXIST)
 
-    await this.manageService.createDir(`${dto.path}${dto.dirName}`)
+    await this.manageService.createDir(`${path}${dto.dirName}`)
   }
 
   @Get('token')
@@ -82,15 +96,17 @@ export class NetDiskManageController {
   @ApiOperation({ summary: '获取文件详细信息' })
   @ApiOkResponse({ type: SFileInfoDetail })
   @Perm(permissions.INFO)
-  async info(@Query() dto: FileInfoDto): Promise<SFileInfoDetail> {
-    return await this.manageService.getFileInfo(dto.name, dto.path)
+  async info(@Query() dto: FileInfoDto, @AuthUser() user: IAuthUser): Promise<SFileInfoDetail> {
+    const path = this.prefixPath(dto.path, user.uid)
+    return await this.manageService.getFileInfo(dto.name, path)
   }
 
   @Post('mark')
   @ApiOperation({ summary: '添加文件备注' })
   @Perm(permissions.MARK)
-  async mark(@Body() dto: MarkFileDto): Promise<void> {
-    await this.manageService.changeFileHeaders(dto.name, dto.path, {
+  async mark(@Body() dto: MarkFileDto, @AuthUser() user: IAuthUser): Promise<void> {
+    const path = this.prefixPath(dto.path, user.uid)
+    await this.manageService.changeFileHeaders(dto.name, path, {
       mark: dto.mark,
     })
   }
@@ -99,55 +115,54 @@ export class NetDiskManageController {
   @ApiOperation({ summary: '获取下载链接，不支持下载文件夹' })
   @ApiOkResponse({ type: String })
   @Perm(permissions.DOWNLOAD)
-  async download(@Query() dto: FileInfoDto): Promise<string> {
-    return this.manageService.getDownloadLink(`${dto.path}${dto.name}`)
+  async download(@Query() dto: FileInfoDto, @AuthUser() user: IAuthUser): Promise<string> {
+    const path = this.prefixPath(dto.path, user.uid)
+    return this.manageService.getDownloadLink(`${path}${dto.name}`)
   }
 
   @Post('rename')
   @ApiOperation({ summary: '重命名文件或文件夹' })
   @Perm(permissions.RENAME)
-  async rename(@Body() dto: RenameDto): Promise<void> {
+  async rename(@Body() dto: RenameDto, @AuthUser() user: IAuthUser): Promise<void> {
+    const path = this.prefixPath(dto.path, user.uid)
     const result = await this.manageService.checkFileExist(
-      `${dto.path}${dto.toName}${dto.type === 'dir' ? '/' : ''}`,
+      `${path}${dto.toName}${dto.type === 'dir' ? '/' : ''}`,
     )
     if (result)
       throw new BusinessException(ErrorEnum.OSS_FILE_OR_DIR_EXIST)
 
     if (dto.type === 'file')
-      await this.manageService.renameFile(dto.path, dto.name, dto.toName)
+      await this.manageService.renameFile(path, dto.name, dto.toName)
     else
-      await this.manageService.renameDir(dto.path, dto.name, dto.toName)
+      await this.manageService.renameDir(path, dto.name, dto.toName)
   }
 
   @Post('delete')
   @ApiOperation({ summary: '删除文件或文件夹' })
   @Perm(permissions.DELETE)
-  async delete(@Body() dto: DeleteDto): Promise<void> {
-    await this.manageService.deleteMultiFileOrDir(dto.files, dto.path)
+  async delete(@Body() dto: DeleteDto, @AuthUser() user: IAuthUser): Promise<void> {
+    const path = this.prefixPath(dto.path, user.uid)
+    await this.manageService.deleteMultiFileOrDir(dto.files, path)
   }
 
   @Post('cut')
   @ApiOperation({ summary: '剪切文件或文件夹，支持批量' })
   @Perm(permissions.CUT)
-  async cut(@Body() dto: FileOpDto): Promise<void> {
-    if (dto.originPath === dto.toPath)
+  async cut(@Body() dto: FileOpDto, @AuthUser() user: IAuthUser): Promise<void> {
+    const originPath = this.prefixPath(dto.originPath, user.uid)
+    const toPath = this.prefixPath(dto.toPath, user.uid)
+    if (originPath === toPath)
       throw new BusinessException(ErrorEnum.OSS_NO_OPERATION_REQUIRED)
 
-    await this.manageService.moveMultiFileOrDir(
-      dto.files,
-      dto.originPath,
-      dto.toPath,
-    )
+    await this.manageService.moveMultiFileOrDir(dto.files, originPath, toPath)
   }
 
   @Post('copy')
   @ApiOperation({ summary: '复制文件或文件夹，支持批量' })
   @Perm(permissions.COPY)
-  async copy(@Body() dto: FileOpDto): Promise<void> {
-    await this.manageService.copyMultiFileOrDir(
-      dto.files,
-      dto.originPath,
-      dto.toPath,
-    )
+  async copy(@Body() dto: FileOpDto, @AuthUser() user: IAuthUser): Promise<void> {
+    const originPath = this.prefixPath(dto.originPath, user.uid)
+    const toPath = this.prefixPath(dto.toPath, user.uid)
+    await this.manageService.copyMultiFileOrDir(dto.files, originPath, toPath)
   }
 }

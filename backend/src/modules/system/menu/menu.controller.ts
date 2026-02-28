@@ -99,6 +99,7 @@ export class MenuController {
 
   @Get('permissions')
   @ApiOperation({ summary: '获取后端定义的所有权限集' })
+  @Perm(permissions.LIST)
   async getPermissions(): Promise<string[]> {
     return getDefinePermissions()
   }

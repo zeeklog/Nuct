@@ -60,7 +60,10 @@ export class RbacGuard implements CanActivate {
 
     // handle permission strings
     if (Array.isArray(payloadPermission)) {
-      // 只要有一个权限满足即可
+      // 如果所有元素都通过测试，返回 true；
+      // 只要有一个元素不通过，立即返回 false（不会继续遍历剩余元素）；
+      // 不会改变原数组；
+      // 不会对空数组进行检测（空数组调用 every() 直接返回 true）。
       canNext = payloadPermission.every(i => allPermissions.includes(i))
     }
 
