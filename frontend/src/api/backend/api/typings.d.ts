@@ -470,6 +470,8 @@ declare namespace API {
     type: 0 | 1 | 2;
     /** 父级菜单 */
     parentId: number;
+    /** 菜单编码，唯一标识 */
+    code: string;
     /** 菜单或权限名称 */
     name: string;
     /** 排序 */
@@ -507,6 +509,8 @@ declare namespace API {
     updater: string;
     children: MenuItemInfo[];
     parentId: number;
+    /** 菜单编码 */
+    code?: string;
     name: string;
     path: string;
     permission: string;

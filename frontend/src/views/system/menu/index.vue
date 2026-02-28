@@ -18,7 +18,7 @@
   import { getCurrentInstance } from 'vue';
   import { useResizeObserver } from '@vueuse/core';
   import { baseColumns, type TableListItem, type TableColumnItem } from './columns';
-  import { useMenuSchemas } from './formSchemas';
+  import { useMenuSchemas, nameToMenuCode } from './formSchemas';
   import Api from '@/api/';
   import { useTable } from '@/components/core/dynamic-table';
   import { useFormModal } from '@/hooks/useModal/';
@@ -53,6 +53,9 @@
         onFinish: async (values) => {
           console.log('新增/编辑菜单', values);
           record.id && (values.menuId = record.id);
+          if (!values.code && values.name) {
+            values.code = nameToMenuCode(values.name);
+          }
           if (Array.isArray(values.component)) {
             values.component = values.component.join('/');
           }
@@ -81,6 +84,7 @@
       icon: record.icon ?? '',
       parentId: record.parentId ?? -1,
       component: record.component?.split('/'),
+      code: record.code ?? '',
     });
     console.log('record', record);
   };

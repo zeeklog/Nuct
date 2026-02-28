@@ -22,6 +22,7 @@ export enum ErrorEnum {
   UNABLE_TO_FIND_DEPARTMENT_FOR_USER = '1018:无法查找当前用户所属部门',
   DEPARTMENT_NOT_FOUND = '1019:部门不存在',
   PARAMETER_CONFIG_KEY_EXISTS = '1022:参数配置键值对已存在',
+  MENU_CODE_EXISTS = '1025:菜单编码已存在',
   DEFAULT_ROLE_NOT_FOUND = '1023:所分配的默认角色不存在',
   TENANT_CODE_EXISTS = '1024:租户编码已存在',
 

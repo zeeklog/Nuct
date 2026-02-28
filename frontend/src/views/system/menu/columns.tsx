@@ -31,6 +31,12 @@ export const baseColumns: TableColumnItem[] = [
     width: 200,
   },
   {
+    title: '菜单编码',
+    dataIndex: 'code',
+    width: 160,
+    ellipsis: true,
+  },
+  {
     title: '图标',
     width: 40,
     dataIndex: 'icon',

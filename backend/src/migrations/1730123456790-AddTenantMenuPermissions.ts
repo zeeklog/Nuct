@@ -18,10 +18,17 @@ export class AddTenantMenuPermissions1730123456790 implements MigrationInterface
     ]
 
     const showCol = '`show`'
+    const codeMap: Record<string, string> = {
+      '新增': 'xin_zeng',
+      '查询': 'cha_xun',
+      '修改': 'xiu_gai',
+      '删除': 'shan_chu',
+    }
     for (const btn of buttons) {
+      const code = codeMap[btn.name] ?? `btn_${btn.order_no}`
       await queryRunner.query(
-        `INSERT INTO sys_menu (tenant_id, parent_id, path, name, permission, type, icon, order_no, component, keep_alive, ${showCol}, status, is_ext, ext_open_mode)
-         VALUES (1, ${parentId}, '', '${btn.name}', '${btn.permission}', 2, '', ${btn.order_no}, NULL, 0, 1, 1, 0, 1)`,
+        `INSERT INTO sys_menu (tenant_id, parent_id, path, name, code, permission, type, icon, order_no, component, keep_alive, ${showCol}, status, is_ext, ext_open_mode)
+         VALUES (1, ${parentId}, '', '${btn.name}', '${code}', '${btn.permission}', 2, '', ${btn.order_no}, NULL, 0, 1, 1, 0, 1)`,
       )
       const [inserted] = await queryRunner.query(
         `SELECT id FROM sys_menu WHERE parent_id = ${parentId} AND permission = '${btn.permission}' LIMIT 1`,
