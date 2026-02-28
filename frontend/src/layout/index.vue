@@ -34,7 +34,6 @@
           </template>
         </router-view>
       </Layout.Content>
-      <PageFooter />
     </Layout>
   </Layout>
 </template>
@@ -47,7 +46,6 @@
   import { TabsView } from './tabs';
   import AsideMenu from './menu/menu.vue';
   import PageHeader from './header/index.vue';
-  import PageFooter from './footer';
   import { useLayoutSettingStore } from '@/store/modules/layoutSetting';
 
   const layoutSettingStore = useLayoutSettingStore();

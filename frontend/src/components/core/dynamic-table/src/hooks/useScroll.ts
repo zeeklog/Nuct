@@ -32,6 +32,7 @@ export const useScroll = ({ props, containerElRef }: UseScrollParams) => {
 
   const scroll = computed(() => {
     return {
+      x: 'max-content', // 表格超宽时启用横向滚动
       y: scrollY.value,
       ...props.scroll,
     };

@@ -164,7 +164,7 @@
     border-radius: 16px;
     border: 1px solid rgba(226, 232, 240, 0.8);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
-    overflow: hidden;
+    overflow: auto; /* 表格超宽/超高时显示滚动条，避免内容被裁剪 */
     transition: all 0.3s;
 
     &:hover {
@@ -173,6 +173,10 @@
 
     :deep(.ant-table-wrapper) {
       padding: 0;
+
+      .ant-pagination {
+        padding-right: 1em;
+      }
 
       .ant-table {
         background: transparent;
