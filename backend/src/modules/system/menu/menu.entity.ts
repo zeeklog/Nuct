@@ -1,16 +1,20 @@
-import { Column, Entity, ManyToMany, Relation } from 'typeorm'
+import { Column, Entity, ManyToMany, Relation, Unique } from 'typeorm'
 
 import { CompleteEntity } from '~/common/entity/common.entity'
 
 import { RoleEntity } from '../role/role.entity'
 
 @Entity({ name: 'sys_menu' })
+@Unique('IDX_menu_tenant_code', ['tenantId', 'code'])
 export class MenuEntity extends CompleteEntity {
   @Column({ name: 'tenant_id', default: 1 })
   tenantId: number
 
   @Column({ name: 'parent_id', nullable: true })
   parentId: number
+
+  @Column({ length: 100 })
+  code: string
 
   @Column()
   name: string

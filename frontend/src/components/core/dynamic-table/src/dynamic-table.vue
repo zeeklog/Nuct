@@ -206,6 +206,12 @@
         .ant-table-tbody > tr:hover > td {
           background: rgba(139, 92, 246, 0.02) !important;
         }
+
+        /* 固定列 hover 时也需背景色，避免与滚动列重叠导致数据错位 */
+        .ant-table-tbody > tr:hover > td.ant-table-cell-fix-left,
+        .ant-table-tbody > tr:hover > td.ant-table-cell-fix-right {
+          background: #FFFFFF !important;
+        }
       }
     }
   }
@@ -326,6 +332,12 @@
           }
 
           .ant-table-tbody > tr:hover > td {
+            background: rgba(139, 92, 246, 0.05) !important;
+          }
+
+          /* 固定列 hover 时也需背景色，避免与滚动列重叠导致数据错位 */
+          .ant-table-tbody > tr:hover > td.ant-table-cell-fix-left,
+          .ant-table-tbody > tr:hover > td.ant-table-cell-fix-right {
             background: rgba(139, 92, 246, 0.05) !important;
           }
         }

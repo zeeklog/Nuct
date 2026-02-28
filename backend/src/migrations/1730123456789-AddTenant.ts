@@ -74,8 +74,8 @@ export class AddTenant1730123456789 implements MigrationInterface {
 
     // 8. 插入租户管理菜单（默认租户，系统管理下）
     await queryRunner.query(`
-      INSERT INTO \`sys_menu\` (\`tenant_id\`, \`parent_id\`, \`path\`, \`name\`, \`permission\`, \`type\`, \`icon\`, \`order_no\`, \`component\`, \`keep_alive\`, \`show\`, \`status\`, \`is_ext\`, \`ext_open_mode\`)
-      VALUES (1, 1, '/system/tenant', '租户管理', 'system:tenant:list', 1, 'ant-design:team-outlined', 250, 'system/tenant/index', 0, 1, 1, 0, 1)
+      INSERT INTO \`sys_menu\` (\`tenant_id\`, \`parent_id\`, \`path\`, \`name\`, \`code\`, \`permission\`, \`type\`, \`icon\`, \`order_no\`, \`component\`, \`keep_alive\`, \`show\`, \`status\`, \`is_ext\`, \`ext_open_mode\`)
+      VALUES (1, 1, '/system/tenant', '租户管理', 'zu_hu_guan_li', 'system:tenant:list', 1, 'ant-design:team-outlined', 250, 'system/tenant/index', 0, 1, 1, 0, 1)
     `)
     const [menuRow] = await queryRunner.query(`SELECT id FROM sys_menu WHERE path = '/system/tenant' AND tenant_id = 1`)
     const tenantMenuId = menuRow?.id

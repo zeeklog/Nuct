@@ -37,6 +37,7 @@ export class MenuService {
    */
   async list({
     name,
+    code,
     path,
     permission,
     component,
@@ -47,6 +48,7 @@ export class MenuService {
       where: {
         tenantId,
         ...(name && { name: Like(`%${name}%`) }),
+        ...(code && { code: Like(`%${code}%`) }),
         ...(path && { path: Like(`%${path}%`) }),
         ...(permission && { permission: Like(`%${permission}%`) }),
         ...(component && { component: Like(`%${component}%`) }),
@@ -66,11 +68,14 @@ export class MenuService {
 
   async create(menu: MenuDto): Promise<void> {
     const tenantId = this.tenantContext.getTenantId()
+    await this.checkCodeUnique(menu.code)
     const result = await this.menuRepository.save({ ...menu, tenantId })
     this.sseService.noticeClientToUpdateMenusByMenuIds([result.id])
   }
 
   async update(id: number, menu: MenuUpdateDto): Promise<void> {
+    if (menu.code !== undefined)
+      await this.checkCodeUnique(menu.code, id)
     await this.menuRepository.update(id, menu)
     this.sseService.noticeClientToUpdateMenusByMenuIds([id])
   }
@@ -101,6 +106,22 @@ export class MenuService {
 
     const menuList = generatorRouters(menus)
     return menuList
+  }
+
+  /**
+   * 检查菜单编码是否已存在（同租户内唯一）
+   */
+  async checkCodeUnique(code: string, excludeId?: number): Promise<void | never> {
+    const tenantId = this.tenantContext.getTenantId()
+    const existing = await this.menuRepository.findOne({
+      where: {
+        tenantId,
+        code,
+        ...(excludeId ? { id: Not(excludeId) } : {}),
+      },
+    })
+    if (existing)
+      throw new BusinessException(ErrorEnum.MENU_CODE_EXISTS)
   }
 
   /**

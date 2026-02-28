@@ -5,6 +5,7 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  Matches,
   Min,
   MinLength,
   ValidateIf,
@@ -37,6 +38,12 @@ export class MenuDto extends OperatorDto {
   @ApiProperty({ description: '父级菜单' })
   @IsOptional()
   parentId: number
+
+  @ApiProperty({ description: '菜单编码，唯一标识，建议使用拼音+下划线格式如 cai_dan_guan_li' })
+  @IsString()
+  @MinLength(2)
+  @Matches(/^[a-z0-9_]+$/, { message: '菜单编码只能包含小写字母、数字和下划线' })
+  code: string
 
   @ApiProperty({ description: '菜单或权限名称' })
   @IsString()
@@ -104,4 +111,9 @@ export class MenuDto extends OperatorDto {
 
 export class MenuUpdateDto extends PartialType(MenuDto) {}
 
-export class MenuQueryDto extends PartialType(MenuDto) {}
+export class MenuQueryDto extends PartialType(MenuDto) {
+  @ApiProperty({ description: '菜单编码', required: false })
+  @IsOptional()
+  @IsString()
+  code?: string
+}

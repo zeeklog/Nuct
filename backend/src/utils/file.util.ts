@@ -58,40 +58,69 @@ export function getSize(bytes: number, decimals = 2) {
   return `${Number.parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`
 }
 
+/**
+ * 安全重命名文件名，防止路径遍历
+ * 仅保留 basename，过滤 .. / \ 等危险字符
+ */
 export function fileRename(fileName: string) {
-  const name = fileName.split('.')[0]
-  const extName = path.extname(fileName)
+  const safeName = path.basename(fileName).replace(/\.\.|[\\/]/g, '')
+  const name = safeName.includes('.') ? safeName.split('.')[0] : safeName
+  const extName = path.extname(fileName).replace('.', '') || 'bin'
   const time = dayjs().format('YYYYMMDDHHmmSSS')
-  return `${name}-${time}${extName}`
+  return `${name || 'file'}-${time}.${extName}`
 }
 
 export function getFilePath(name: string, currentDate: string, type: string) {
   return `/upload/${currentDate}/${type}/${name}`
 }
 
+const UPLOAD_ROOT = path.resolve(__dirname, '../../public/upload')
+
 export async function saveLocalFile(buffer: Buffer, name: string, currentDate: string, type: string) {
-  const filePath = path.join(__dirname, '../../', 'public/upload/', `${currentDate}/`, `${type}/`)
+  const safeName = path.basename(name).replace(/\.\.|[\\/]/g, '')
+  if (!safeName)
+    throw new Error('Invalid file name')
+
+  const dirPath = path.join(UPLOAD_ROOT, currentDate, type)
+  const fullPath = path.join(dirPath, safeName)
+  const resolvedPath = path.resolve(fullPath)
+
+  if (!resolvedPath.startsWith(UPLOAD_ROOT))
+    throw new Error('Path traversal detected')
+
   try {
-    // 判断是否有该文件夹
-    await fs.promises.stat(filePath)
+    await fs.promises.stat(dirPath)
   }
-  catch (error) {
-    // 没有该文件夹就创建
-    await fs.promises.mkdir(filePath, { recursive: true })
+  catch {
+    await fs.promises.mkdir(dirPath, { recursive: true })
   }
-  const writeStream = fs.createWriteStream(filePath + name)
+  const writeStream = fs.createWriteStream(resolvedPath)
   writeStream.write(buffer)
 }
 
 export async function saveFile(file: MultipartFile, name: string) {
-  const filePath = path.join(__dirname, '../../', 'public/upload', name)
-  const writeStream = fs.createWriteStream(filePath)
+  const safeName = path.basename(name).replace(/\.\.|[\\/]/g, '')
+  if (!safeName)
+    throw new Error('Invalid file name')
+
+  const fullPath = path.join(UPLOAD_ROOT, safeName)
+  const resolvedPath = path.resolve(fullPath)
+  if (!resolvedPath.startsWith(UPLOAD_ROOT))
+    throw new Error('Path traversal detected')
+
+  const writeStream = fs.createWriteStream(resolvedPath)
   const buffer = await file.toBuffer()
   writeStream.write(buffer)
 }
 
 export async function deleteFile(name: string) {
-  fs.unlink(path.join(__dirname, '../../', 'public', name), () => {
-    // console.log(error);
-  })
+  const relativePath = name.replace(/^\//, '').replace(/\.\./g, '')
+  const publicRoot = path.resolve(__dirname, '../../public')
+  const fullPath = path.join(publicRoot, relativePath)
+  const resolvedPath = path.resolve(fullPath)
+
+  if (!resolvedPath.startsWith(publicRoot))
+    throw new Error('Path traversal detected')
+
+  fs.unlink(resolvedPath, () => {})
 }

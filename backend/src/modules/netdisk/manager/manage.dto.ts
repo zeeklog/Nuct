@@ -35,8 +35,25 @@ export class IsLegalNameExpression implements ValidatorConstraintInterface {
   }
 
   defaultMessage(_args: ValidationArguments) {
-    // here you can provide default error message if validation failed
     return 'file or dir name invalid'
+  }
+}
+
+/** 校验网盘 path 参数，禁止路径遍历 */
+@ValidatorConstraint({ name: 'IsSafeNetdiskPath', async: false })
+export class IsSafeNetdiskPath implements ValidatorConstraintInterface {
+  validate(value: string, _args: ValidationArguments) {
+    if (isEmpty(value))
+      return true
+    if (value.includes('..') || value.startsWith('/'))
+      return false
+    if (!/^[\w\u4e00-\u9fa5/.-]*\/?$/.test(value))
+      return false
+    return true
+  }
+
+  defaultMessage() {
+    return 'path invalid: path traversal or illegal characters not allowed'
   }
 }
 
@@ -61,6 +78,7 @@ export class GetFileListDto {
 
   @ApiProperty({ description: '当前路径' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   path: string
 
   @ApiPropertyOptional({ description: '搜索关键字' })
@@ -79,6 +97,7 @@ export class MKDirDto {
 
   @ApiProperty({ description: '所属路径' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   path: string
 }
 
@@ -102,6 +121,7 @@ export class RenameDto {
 
   @ApiProperty({ description: '路径' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   path: string
 }
 
@@ -114,6 +134,7 @@ export class FileInfoDto {
 
   @ApiProperty({ description: '文件所在路径' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   path: string
 }
 
@@ -126,6 +147,7 @@ export class DeleteDto {
 
   @ApiProperty({ description: '所在目录' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   path: string
 }
 
@@ -138,6 +160,7 @@ export class MarkFileDto {
 
   @ApiProperty({ description: '文件所在路径' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   path: string
 
   @ApiProperty({ description: '备注信息' })
@@ -154,9 +177,11 @@ export class FileOpDto {
 
   @ApiProperty({ description: '操作前的目录' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   originPath: string
 
   @ApiProperty({ description: '操作后的目录' })
   @IsString()
+  @Validate(IsSafeNetdiskPath)
   toPath: string
 }

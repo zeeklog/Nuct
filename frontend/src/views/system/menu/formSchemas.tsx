@@ -1,9 +1,21 @@
 import { h } from 'vue';
+import { pinyin } from 'pinyin-pro';
 import type { FormSchema } from '@/components/core/schema-form/';
 import { IconPicker, Icon } from '@/components/basic/icon';
 import { asyncRoutes } from '@/router/asyncModules';
 import Api from '@/api/';
 import { findPath, str2tree } from '@/utils/common';
+
+/** 根据名称生成菜单编码（拼音+下划线） */
+export function nameToMenuCode(name: string): string {
+  if (!name?.trim()) return '';
+  const py = pinyin(name.trim(), { toneType: 'none', separator: '_', nonZh: 'removed' });
+  return py
+    .toLowerCase()
+    .replace(/[^a-z0-9_]+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '') || `menu_${Date.now()}`;
+}
 
 /** 菜单类型 0: 目录 | 1: 菜单 | 2: 按钮 */
 const isDir = (type: API.MenuDto['type']) => type === 0;
@@ -39,6 +51,27 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
     component: 'Input',
     label: ({ formModel }) => (isButton(formModel['type']) ? '权限名称' : '节点名称'),
     rules: [{ required: true, type: 'string' }],
+  },
+  {
+    field: 'code',
+    component: 'Input',
+    label: '菜单编码',
+    helpMessage: '唯一标识，小写字母/数字/下划线。留空可输入名称后失焦自动生成',
+    rules: [{ required: true, type: 'string' }, { pattern: /^[a-z0-9_]+$/, message: '只能包含小写字母、数字和下划线' }],
+    componentProps: {
+      placeholder: '如 cai_dan_guan_li',
+    },
+    afterSlot: ({ formModel }) =>
+      h(Icon, {
+        icon: 'ant-design:reload-outlined',
+        title: '根据名称生成',
+        class: 'ml-[12px] cursor-pointer text-primary',
+        onclick: () => {
+          if (formModel['name']) {
+            formModel['code'] = nameToMenuCode(String(formModel['name']));
+          }
+        },
+      }),
   },
   {
     field: 'parentId',
