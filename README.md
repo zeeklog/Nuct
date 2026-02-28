@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <strong>基于 NestJs +Vue3的企业级前后端分离快速开发脚手架， 将你的基础工作交给Cursor Rules & Skills</strong>
+  <strong>AI时代的企业平台开发底座基础设施。基于 NestJs +Vue3的企业级前后端分离快速开发脚手架， 将你的基础工作交给Cursor Rules & Skills。</strong>
 </p>
 
 <p align="center">
